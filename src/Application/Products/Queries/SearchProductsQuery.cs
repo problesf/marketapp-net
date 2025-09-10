@@ -1,11 +1,8 @@
-// Request
-using MediatR;
-using MarketApp.src.Domain.entities.product;
-using System.Collections.Generic;
-using MarketNet.src.Infraestructure.Repositories;
-using MarketNet.src.Application.Products.Criteria;
 using AutoMapper;
+using MarketNet.src.Application.Products.Criteria;
 using MarketNet.src.Application.Products.Dto;
+using MarketNet.src.Infraestructure.Repositories;
+using MediatR;
 
 namespace MarketNet.src.Application.Products.Queries
 {
@@ -44,7 +41,7 @@ namespace MarketNet.src.Application.Products.Queries
                 IsActive = request.IsActive
             };
 
-            var products= await productRepository.SearchProductsAsync(criteria);
+            var products = await productRepository.SearchProductsAsync(criteria);
             return mapper.Map<List<ProductDto>>(products);
 
         }

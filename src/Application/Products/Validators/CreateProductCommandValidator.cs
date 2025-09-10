@@ -1,39 +1,16 @@
-﻿using FluentValidation;
-using MarketApp.src.Domain.entities.product;
-
-namespace MarketNet.src.Application.Products.Validators
+﻿namespace MarketNet.src.Application.Products.Validators
 {
 
     using FluentValidation;
-    using MarketNet.src.Application.Products.Criteria;
     using MarketNet.src.Application.Products.Dto;
-    using MarketNet.src.Infraestructure.Repositories;
-    using MediatR;
 
     public class CreateProductCommandValidator : AbstractValidator<ProductDto>
     {
-        public CreateProductCommandValidator(IProductRepository? productRepo = null)
+        public CreateProductCommandValidator()
         {
             RuleFor(p => p.Code)
                 .NotEmpty().WithMessage("Code es obligatorio.")
                 .MaximumLength(50).WithMessage("Code no puede exceder 50 caracteres.");
-
-            When(_ => productRepo != null, () =>
-            {
-                RuleFor(p => p)
-                    .MustAsync(async (p, ct) =>
-                    {
-                        ProductSearchCriteria criteria = new ProductSearchCriteria
-                        {
-                            Code = p.Code
-
-                        };
-                        List<Product> productList = (List<Product>)await productRepo.SearchProductsAsync(criteria);
-                        return !productList.Any();
-
-                    })
-                    .WithMessage("Ya existe un producto con el mismo Code.");
-            });
 
             RuleFor(p => p.Stock)
                 .GreaterThanOrEqualTo(0).WithMessage("Stock no puede ser negativo.");

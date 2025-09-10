@@ -1,12 +1,6 @@
-// Placeholder for CreateProductCommand
-
-// Request
-using System.Collections.Generic;
 using AutoMapper;
-using FluentValidation;
 using MarketApp.src.Domain.entities.product;
-using MarketNet.src.Application.Products.Criteria;
-using MarketNet.src.Application.Products.Dto;
+using MarketNet.src.Domain.Exceptions.Products;
 using MarketNet.src.Infraestructure.Repositories;
 using MediatR;
 
@@ -28,6 +22,11 @@ namespace MarketNet.src.Application.Products.Queries
 
         public async Task<long> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
+            Product exist = await productRepository.SearchByProductCode(request.Code);
+            if (exist != null)
+            {
+                throw new ProductExistException($"Ya existe un product con código {request.Code}.");
+            }
 
             Product newProduct = new Product
             {

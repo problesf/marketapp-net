@@ -3,9 +3,6 @@ using MarketApp.src.Domain.entities.product; // Asegúrate de que el namespace d
 using MarketNet.src.Application.Products.Criteria;
 using MarketNet.src.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MarketNet.src.Infraestructure.Repositories.Impl
 {
@@ -13,6 +10,16 @@ namespace MarketNet.src.Infraestructure.Repositories.Impl
     {
         public ProductRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public Task<Product> SearchById(long id)
+        {
+            return _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
+        }
+
+        public Task<Product> SearchByProductCode(string productCode)
+        {
+            return _context.Products.Where(p => p.Code == productCode).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Product>> SearchProductsAsync(ProductSearchCriteria criteria)
