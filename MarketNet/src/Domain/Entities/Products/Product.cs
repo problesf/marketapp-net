@@ -22,9 +22,5 @@ namespace MarketApp.src.Domain.entities.product
         public ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
-
-
-
-
     }
 }

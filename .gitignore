@@ -1,17 +1,5 @@
-# Directorios de compilación
-[Bb]in/
-[Oo]bj/
-
-# Archivos de usuario de Visual Studio
-*.suo
-*.user
-*.vs/
-
-# Paquetes NuGet
-.nuget/
-packages/ # Para proyectos que usan packages.config
-
-
-# Otros archivos temporales o generados
-*.log
-*.tmp
+Application.UnitTest/obj/Debug/net8.0/Application.UnitTest.sourcelink.json
+Application.UnitTest/bin/
+.vs/MarketApp/CopilotIndices/17.14.995.13737/SemanticSymbols.db-wal
+.vs/
+Application.UnitTest/obj/

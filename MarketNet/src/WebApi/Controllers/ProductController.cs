@@ -22,7 +22,7 @@ namespace MarketNet.src.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<List<ProductDto>>> GetProductsByFilter([FromQuery] SearchProductsQuery query)
+        public async Task<ActionResult<List<ProductDto>>> SearchByFilter([FromQuery] SearchProductsQuery query)
         {
             return await _mediator.Send(query);
         }
