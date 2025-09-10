@@ -1,0 +1,17 @@
+# Directorios de compilación
+[Bb]in/
+[Oo]bj/
+
+# Archivos de usuario de Visual Studio
+*.suo
+*.user
+*.vs/
+
+# Paquetes NuGet
+.nuget/
+packages/ # Para proyectos que usan packages.config
+
+
+# Otros archivos temporales o generados
+*.log
+*.tmp

@@ -1,7 +1,7 @@
 ﻿using MarketApp.src.Domain.entities.product;
 using MarketApp.src.Domain.enums;
 
-namespace MarketApp.src.Domain.entities
+namespace MarketNet.src.Domain.entities.Inventory
 {
     public class InventoryMovement
     {

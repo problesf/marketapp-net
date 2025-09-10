@@ -1,6 +1,7 @@
 ﻿using MarketApp.src.Domain.entities.product;
+using MarketNet.src.Domain.entities.Customers;
 
-namespace MarketApp.src.Domain.entities
+namespace MarketNet.src.Domain.entities.Reviews
 {
     public class Review
     {
@@ -14,7 +15,7 @@ namespace MarketApp.src.Domain.entities
 
         public string Comment { get; set; }
 
-        public Boolean isApproved { get; set; }
+        public bool isApproved { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

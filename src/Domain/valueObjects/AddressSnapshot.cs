@@ -1,6 +1,6 @@
 ﻿namespace MarketApp.src.Domain.valueObjects;
 using System;
-using MarketNet.src.Domain.entities.Customer;
+using MarketNet.src.Domain.entities.Customers;
 
 // Usamos 'record' para inmutabilidad y comparación por valor
 public record AddressSnapshot

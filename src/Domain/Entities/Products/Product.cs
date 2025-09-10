@@ -1,9 +1,12 @@
 ﻿using MarketApp.src.Domain.entities.order;
+using MarketNet.src.Domain.entities.Inventory;
+using MarketNet.src.Domain.entities.Reviews;
+using MarketNet.src.Domain.Shared;
 
 namespace MarketApp.src.Domain.entities.product
 {
 
-    public class Product
+    public class Product : IEntity
     {
         public long Id { get; set; }
         public String Code { get; set; }

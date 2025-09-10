@@ -1,5 +1,13 @@
-using MarketNet.src.Domain.config;
+using AutoMapper;
+using FluentValidation;
+using MarketNet.src.Application.Behaviors;
+using MarketNet.src.Application.Products.Validators;
+using MarketNet.src.Infraestructure.Persistence;
+using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.src.Infraestructure.Repositories.Impl;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +17,19 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductCommandValidator>();
 
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+
+builder.Services.AddAutoMapper(cfg => { }, typeof(Program).Assembly);
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblies(
+        typeof(Program).Assembly
+    );
+});
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
