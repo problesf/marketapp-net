@@ -1,5 +1,5 @@
-﻿using MarketApp.src.Domain.entities.product;
-using MarketNet.src.Application.Products.Criteria;
+﻿using MarketNet.src.Application.Products.Dto;
+using MarketNet.src.Domain.Entities.Products;
 
 namespace MarketNet.src.Infraestructure.Repositories
 {

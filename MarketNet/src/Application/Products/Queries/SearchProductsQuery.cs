@@ -1,5 +1,4 @@
 using AutoMapper;
-using MarketNet.src.Application.Products.Criteria;
 using MarketNet.src.Application.Products.Dto;
 using MarketNet.src.Infraestructure.Repositories;
 using MediatR;

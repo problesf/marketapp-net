@@ -1,5 +1,5 @@
-﻿using MarketApp.src.Domain.entities.product;
-using MarketNet.src.Domain.entities.Customers;
+﻿using MarketNet.src.Domain.entities.Customers;
+using MarketNet.src.Domain.Entities.Products;
 
 namespace MarketNet.src.Domain.entities.Reviews
 {

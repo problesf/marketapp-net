@@ -2,7 +2,7 @@
 {
 
     using FluentValidation;
-    using MarketNet.src.Application.Products.Queries;
+    using MarketNet.src.Application.Products.Commands;
 
     public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
     {

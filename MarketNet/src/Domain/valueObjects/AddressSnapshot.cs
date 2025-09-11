@@ -1,4 +1,4 @@
-﻿namespace MarketApp.src.Domain.valueObjects;
+﻿namespace MarketNet.src.Domain.valueObjects;
 using System;
 using MarketNet.src.Domain.entities.Customers;
 

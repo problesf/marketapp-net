@@ -1,4 +1,5 @@
-﻿using MarketNet.src.Application.Products.Queries;
+﻿using MarketNet.src.Application.Products.Commands;
+using MarketNet.src.Application.Products.Queries;
 using MarketNet.src.WebApi.Controllers;
 using MediatR;
 using Newtonsoft.Json;

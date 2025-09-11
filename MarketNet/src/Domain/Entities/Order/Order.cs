@@ -1,8 +1,8 @@
-﻿using MarketApp.src.Domain.enums;
-using MarketApp.src.Domain.valueObjects;
+﻿using MarketNet.src.Domain.Enums;
+using MarketNet.src.Domain.valueObjects;
 using Microsoft.VisualBasic;
 
-namespace MarketApp.src.Domain.entities.order
+namespace MarketNet.src.Domain.Entities.Order
 {
     public class Order
     {

@@ -2,11 +2,11 @@
 using System.Reflection.Emit;
 using System.Text;
 using System.Text.RegularExpressions;
-using MarketApp.src.Domain.entities.order;
-using MarketApp.src.Domain.entities.product;
 using MarketNet.src.Domain.entities.Customers;
 using MarketNet.src.Domain.entities.Inventory;
 using MarketNet.src.Domain.entities.Reviews;
+using MarketNet.src.Domain.Entities.Order;
+using MarketNet.src.Domain.Entities.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 

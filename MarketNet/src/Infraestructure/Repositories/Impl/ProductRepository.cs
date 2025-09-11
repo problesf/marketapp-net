@@ -1,6 +1,5 @@
-﻿
-using MarketApp.src.Domain.entities.product; // Asegúrate de que el namespace de Product sea correcto
-using MarketNet.src.Application.Products.Criteria;
+﻿using MarketNet.src.Application.Products.Dto;
+using MarketNet.src.Domain.Entities.Products;
 using MarketNet.src.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +13,12 @@ namespace MarketNet.src.Infraestructure.Repositories.Impl
 
         public Task<Product> SearchById(long id)
         {
-            return _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
+            return _context.Products.Where(p => p.Id == id).Include(p => p.Categories).FirstOrDefaultAsync();
         }
 
         public Task<Product> SearchByProductCode(string productCode)
         {
-            return _context.Products.Where(p => p.Code == productCode).FirstOrDefaultAsync();
+            return _context.Products.Where(p => p.Code == productCode).Include(p => p.Categories).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Product>> SearchProductsAsync(ProductSearchCriteria criteria)
@@ -81,7 +80,7 @@ namespace MarketNet.src.Infraestructure.Repositories.Impl
                 query = query.Where(p => p.IsActive == criteria.IsActive.Value);
             }
 
-            return await query.ToListAsync();
+            return await query.Include(p => p.Categories).ToListAsync();
         }
     }
 }

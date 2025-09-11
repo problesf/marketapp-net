@@ -1,6 +1,6 @@
-﻿using MarketApp.src.Domain.entities.product;
-using MarketNet.src.Application.Products.Criteria;
-using MarketNet.src.Application.Products.Queries;
+﻿using MarketNet.src.Application.Categorie.Dto;
+using MarketNet.src.Application.Categorie.Queries;
+using MarketNet.src.Domain.Entities.Products;
 using MarketNet.src.Infraestructure.Repositories;
 
 namespace Application.UnitTest.src.Application.Products.Queries;
@@ -42,10 +42,10 @@ public class SearchProductsQueryHandlerTests
             new() { Id = 1, Code = "C-01", Name = "Phone X", Price = 299m, Stock = 10, TaxRate = 0.21m, Currency = "EUR", IsActive = true }
         };
 
-        ProductSearchCriteria? captured = null;
+        CategorySearchCriteria? captured = null;
 
-        _repo.Setup(r => r.SearchProductsAsync(It.IsAny<ProductSearchCriteria>()))
-             .Callback<ProductSearchCriteria>(c => captured = c)
+        _repo.Setup(r => r.SearchProductsAsync(It.IsAny<CategorySearchCriteria>()))
+             .Callback<CategorySearchCriteria>(c => captured = c)
              .ReturnsAsync(products);
 
         var sut = new SearchProductsQueryHandler(_repo.Object, TestBootstrap.Mapper);
@@ -74,13 +74,13 @@ public class SearchProductsQueryHandlerTests
         captured.Currency.Should().Be(request.Currency);
         captured.IsActive.Should().Be(request.IsActive);
 
-        _repo.Verify(r => r.SearchProductsAsync(It.IsAny<ProductSearchCriteria>()), Times.Once);
+        _repo.Verify(r => r.SearchProductsAsync(It.IsAny<CategorySearchCriteria>()), Times.Once);
     }
 
     [Test]
     public async Task HadleOkEmptyLst()
     {
-        _repo.Setup(r => r.SearchProductsAsync(It.IsAny<ProductSearchCriteria>()))
+        _repo.Setup(r => r.SearchProductsAsync(It.IsAny<CategorySearchCriteria>()))
              .ReturnsAsync(new List<Product>());
 
         var sut = new SearchProductsQueryHandler(_repo.Object, TestBootstrap.Mapper);

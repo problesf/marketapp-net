@@ -1,11 +1,11 @@
 using AutoMapper;
-using MarketApp.src.Domain.entities.product;
 using MarketNet.src.Application.Products.Dto;
+using MarketNet.src.Domain.Entities.Products;
 using MarketNet.src.Domain.Exceptions.Products;
 using MarketNet.src.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Products.Queries
+namespace MarketNet.src.Application.Products.Commands
 {
     public record UpdateProductCommand : IRequest<ProductDto>
     {

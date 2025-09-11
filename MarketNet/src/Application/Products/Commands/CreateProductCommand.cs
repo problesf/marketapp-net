@@ -1,10 +1,11 @@
 using AutoMapper;
-using MarketApp.src.Domain.entities.product;
+using MarketNet.src.Domain.Entities.Products;
+using MarketNet.src.Domain.Exceptions.Categories;
 using MarketNet.src.Domain.Exceptions.Products;
 using MarketNet.src.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Products.Queries
+namespace MarketNet.src.Application.Products.Commands
 {
     public record CreateProductCommand : IRequest<long>
     {
@@ -15,9 +16,13 @@ namespace MarketNet.src.Application.Products.Queries
         public int Stock { get; init; }
         public decimal TaxRate { get; init; }
         public string Currency { get; init; }
+
+        public List<long> categoriesId { get; set; }
     }
 
-    public class CreateProductCommandHandler(IProductRepository productRepository, IMapper mapper) : IRequestHandler<CreateProductCommand, long>
+    public class CreateProductCommandHandler(IProductRepository productRepository,
+        ICategoryRepository categoryRepository,
+        IMapper mapper) : IRequestHandler<CreateProductCommand, long>
     {
 
         public async Task<long> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -28,6 +33,17 @@ namespace MarketNet.src.Application.Products.Queries
                 throw new ProductExistException($"Ya existe un product con código {request.Code}.");
             }
 
+            ICollection<Category> productCategories = new List<Category>();
+
+            foreach (long idCategory in request.categoriesId)
+            {
+                Category category = await categoryRepository.GetByIdAsync(idCategory);
+                if (category == null)
+                {
+                    throw new CategoryNotFoundException($"Categoria con ID {idCategory} no encontrado");
+                }
+                productCategories.Add(category);
+            }
             Product newProduct = new Product
             {
                 Code = request.Code,
@@ -37,6 +53,7 @@ namespace MarketNet.src.Application.Products.Queries
                 TaxRate = request.TaxRate,
                 Stock = request.Stock,
                 Currency = request.Currency,
+                Categories = productCategories,
                 IsActive = true
             };
 

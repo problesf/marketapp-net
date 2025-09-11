@@ -2,9 +2,9 @@
 {
 
     using FluentValidation;
-    using MarketNet.src.Application.Products.Dto;
+    using MarketNet.src.Application.Products.Commands;
 
-    public class CreateProductCommandValidator : AbstractValidator<ProductDto>
+    public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
     {
         public CreateProductCommandValidator()
         {

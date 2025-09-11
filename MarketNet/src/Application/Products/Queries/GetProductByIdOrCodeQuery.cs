@@ -1,6 +1,6 @@
 using AutoMapper;
-using MarketApp.src.Domain.entities.product;
 using MarketNet.src.Application.Products.Dto;
+using MarketNet.src.Domain.Entities.Products;
 using MarketNet.src.Domain.Exceptions.Products;
 using MarketNet.src.Infraestructure.Repositories;
 using MediatR;

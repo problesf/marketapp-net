@@ -1,4 +1,4 @@
-﻿namespace MarketApp.src.Domain.enums
+﻿namespace MarketNet.src.Domain.Enums
 {
     public enum Status
     {

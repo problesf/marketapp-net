@@ -1,5 +1,5 @@
-﻿using MarketApp.src.Domain.entities.product;
-using MarketApp.src.Domain.enums;
+﻿using MarketNet.src.Domain.Entities.Products;
+using MarketNet.src.Domain.Enums;
 
 namespace MarketNet.src.Domain.entities.Inventory
 {

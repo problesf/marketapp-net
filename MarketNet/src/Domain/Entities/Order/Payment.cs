@@ -1,7 +1,7 @@
-﻿using MarketApp.src.Domain.enums;
+﻿using MarketNet.src.Domain.Enums;
 using Microsoft.VisualBasic;
 
-namespace MarketApp.src.Domain.entities.order
+namespace MarketNet.src.Domain.Entities.Order
 {
     public class Payment
     {

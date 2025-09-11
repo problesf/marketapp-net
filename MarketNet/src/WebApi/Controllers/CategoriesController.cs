@@ -1,6 +1,6 @@
-﻿using MarketNet.src.Application.Products.Commands;
-using MarketNet.src.Application.Products.Dto;
-using MarketNet.src.Application.Products.Queries;
+﻿using MarketNet.src.Application.Categories.Commands;
+using MarketNet.src.Application.Categories.Dto;
+using MarketNet.src.Application.Categories.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,33 +8,31 @@ namespace MarketNet.src.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ProductController(IMediator mediator)
+        public CategoriesController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CategoryDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<List<ProductDto>>> SearchByFilter([FromQuery] SearchProductsQuery query)
+        public async Task<ActionResult<List<CategoryDto>>> search([FromQuery] SearchCategoriesQuery query)
         {
             return await _mediator.Send(query);
         }
 
         [HttpGet("searchByIdentifier")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<ProductDto>> Search(
-           [FromQuery] SearchProductsByProductCodeOrIdQuery request
-       )
+        public async Task<ActionResult<CategoryDto>> Search([FromQuery] SearchCategoryByIdOrSlugQuery request)
         {
             return await _mediator.Send(request);
         }
@@ -44,17 +42,17 @@ namespace MarketNet.src.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<long>> Create(CreateProductCommand command)
+        public async Task<ActionResult<long>> Create(CreateCategoryCommand command)
         {
             return await _mediator.Send(command);
         }
 
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<ProductDto>> Update(UpdateProductCommand command)
+        public async Task<ActionResult<CategoryDto>> Update(UpdateCategoryCommand command)
         {
             return await _mediator.Send(command);
         }
