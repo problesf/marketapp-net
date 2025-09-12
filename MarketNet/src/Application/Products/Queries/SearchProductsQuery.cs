@@ -1,9 +1,9 @@
 using AutoMapper;
-using MarketNet.src.Application.Products.Dto;
-using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.Application.Products.Dto;
+using MarketNet.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Products.Queries
+namespace MarketNet.Application.Products.Queries
 {
     public record SearchProductsQuery : IRequest<List<ProductDto>>
     {

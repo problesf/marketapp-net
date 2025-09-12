@@ -1,7 +1,8 @@
-﻿using MarketNet.src.Application.Categorie.Dto;
-using MarketNet.src.Application.Categorie.Queries;
-using MarketNet.src.Domain.Entities.Products;
-using MarketNet.src.Infraestructure.Repositories;
+﻿
+using MarketNet.Application.Products.Dto;
+using MarketNet.Domain.Entities.Products;
+using MarketNet.Infraestructure.Repositories;
+using MarketNet.Application.Products.Queries;
 
 namespace Application.UnitTest.src.Application.Products.Queries;
 
@@ -39,13 +40,14 @@ public class SearchProductsQueryHandlerTests
 
         var products = new List<Product>
         {
-            new() { Id = 1, Code = "C-01", Name = "Phone X", Price = 299m, Stock = 10, TaxRate = 0.21m, Currency = "EUR", IsActive = true }
+            new Product(1, "C-01", "Phone X", "Smartphone básico", 299m, 10, 0.21m, "EUR", true)
         };
+     
 
-        CategorySearchCriteria? captured = null;
+        ProductSearchCriteria? captured = null;
 
-        _repo.Setup(r => r.SearchProductsAsync(It.IsAny<CategorySearchCriteria>()))
-             .Callback<CategorySearchCriteria>(c => captured = c)
+        _repo.Setup(r => r.SearchProductsAsync(It.IsAny<ProductSearchCriteria>()))
+             .Callback<ProductSearchCriteria>(c => captured = c)
              .ReturnsAsync(products);
 
         var sut = new SearchProductsQueryHandler(_repo.Object, TestBootstrap.Mapper);
@@ -74,13 +76,13 @@ public class SearchProductsQueryHandlerTests
         captured.Currency.Should().Be(request.Currency);
         captured.IsActive.Should().Be(request.IsActive);
 
-        _repo.Verify(r => r.SearchProductsAsync(It.IsAny<CategorySearchCriteria>()), Times.Once);
+        _repo.Verify(r => r.SearchProductsAsync(It.IsAny<ProductSearchCriteria>()), Times.Once);
     }
 
     [Test]
     public async Task HadleOkEmptyLst()
     {
-        _repo.Setup(r => r.SearchProductsAsync(It.IsAny<CategorySearchCriteria>()))
+        _repo.Setup(r => r.SearchProductsAsync(It.IsAny<ProductSearchCriteria>()))
              .ReturnsAsync(new List<Product>());
 
         var sut = new SearchProductsQueryHandler(_repo.Object, TestBootstrap.Mapper);

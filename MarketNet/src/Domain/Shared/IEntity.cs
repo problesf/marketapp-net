@@ -1,7 +1,7 @@
-﻿namespace MarketNet.src.Domain.Shared
+﻿namespace MarketNet.Domain.Shared
 {
     public interface IEntity
     {
-        long Id { get; set; }
+        long? Id { get; set; }
     }
 }

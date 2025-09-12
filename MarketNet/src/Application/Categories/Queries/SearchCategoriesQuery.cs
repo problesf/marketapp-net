@@ -1,9 +1,9 @@
 using AutoMapper;
-using MarketNet.src.Application.Categories.Dto;
-using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.Application.Categories.Dto;
+using MarketNet.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Categories.Queries
+namespace MarketNet.Application.Categories.Queries
 {
     public record SearchCategoriesQuery : IRequest<List<CategoryDto>>
     {

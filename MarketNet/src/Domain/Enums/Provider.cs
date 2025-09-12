@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Domain.Enums
+﻿namespace MarketNet.Domain.Enums
 {
     public enum Provider
     {

@@ -1,10 +1,10 @@
 using FluentValidation;
-using MarketNet.src.Application.Behaviors;
-using MarketNet.src.Application.Categories.Validators;
-using MarketNet.src.Infraestructure.Persistence;
-using MarketNet.src.Infraestructure.Repositories;
-using MarketNet.src.Infraestructure.Repositories.Impl;
-using MarketNet.src.WebApi.Middleware;
+using MarketNet.Application.Behaviors;
+using MarketNet.Application.Categories.Validators;
+using MarketNet.Infraestructure.Persistence;
+using MarketNet.Infraestructure.Repositories;
+using MarketNet.Infraestructure.Repositories.Impl;
+using MarketNet.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

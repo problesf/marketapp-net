@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MarketNet.src.WebApi.Middleware
+namespace MarketNet.WebApi.Middleware
 {
     public class FluentValidationExceptionHandler : IExceptionHandler
     {

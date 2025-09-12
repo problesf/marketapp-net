@@ -1,8 +1,8 @@
-﻿namespace MarketNet.src.Application.Categories.Validators
+﻿namespace MarketNet.Application.Categories.Validators
 {
 
     using FluentValidation;
-    using MarketNet.src.Application.Categories.Commands;
+    using MarketNet.Application.Categories.Commands;
 
     public class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategoryCommand>
     {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using MarketNet.src.Application.Products.Dto;
-using MarketNet.src.Domain.Entities.Products;
-namespace MarketNet.src.Infraestructure.Mappers
+using MarketNet.Application.Products.Dto;
+using MarketNet.Domain.Entities.Products;
+namespace MarketNet.Infraestructure.Mappers
 {
     public class ProductProfile : Profile
     {

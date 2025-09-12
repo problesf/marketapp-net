@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Domain.Exceptions.Products
+﻿namespace MarketNet.Domain.Exceptions.Products
 {
     [Serializable]
     class ProductNotFoundException : Exception

@@ -1,11 +1,11 @@
 using AutoMapper;
-using MarketNet.src.Application.Products.Dto;
-using MarketNet.src.Domain.Entities.Products;
-using MarketNet.src.Domain.Exceptions.Products;
-using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.Application.Products.Dto;
+using MarketNet.Domain.Entities.Products;
+using MarketNet.Domain.Exceptions.Products;
+using MarketNet.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Products.Queries
+namespace MarketNet.Application.Products.Queries
 {
     public record SearchProductsByProductCodeOrIdQuery : IRequest<ProductDto>
     {
@@ -23,7 +23,7 @@ namespace MarketNet.src.Application.Products.Queries
             {
                 product = await productRepository.SearchByProductCode(request.Code);
                 if (product == null)
-                    throw new ProductNotFoundException($"Producto con código '{request.Code}' no encontrado");
+                    throw new ProductNotFoundException($"Producto con cï¿½digo '{request.Code}' no encontrado");
             }
             else if (request.Id.HasValue)
             {
@@ -33,7 +33,7 @@ namespace MarketNet.src.Application.Products.Queries
             }
             else
             {
-                throw new ArgumentException("Debes proporcionar al menos Código o Id del producto");
+                throw new ArgumentException("Debes proporcionar al menos Cï¿½digo o Id del producto");
             }
 
             return mapper.Map<ProductDto>(product);

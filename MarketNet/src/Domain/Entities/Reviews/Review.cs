@@ -1,7 +1,7 @@
-﻿using MarketNet.src.Domain.entities.Customers;
-using MarketNet.src.Domain.Entities.Products;
+﻿using MarketNet.Domain.entities.Customers;
+using MarketNet.Domain.Entities.Products;
 
-namespace MarketNet.src.Domain.entities.Reviews
+namespace MarketNet.Domain.entities.Reviews
 {
     public class Review
     {
@@ -24,5 +24,17 @@ namespace MarketNet.src.Domain.entities.Reviews
         public Customer Customer { get; set; }
 
 
+        public Review(long id, long productId, long customerId, int rating, string comment, bool isApproved, DateTime createdAt, Product product, Customer customer)
+        {
+            Id = id;
+            ProductId = productId;
+            CustomerId = customerId;
+            Rating = rating;
+            Comment = comment;
+            this.isApproved = isApproved;
+            CreatedAt = createdAt;
+            Product = product;
+            Customer = customer;
+        }
     }
 }

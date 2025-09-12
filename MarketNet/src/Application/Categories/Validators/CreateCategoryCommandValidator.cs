@@ -1,8 +1,8 @@
-﻿namespace MarketNet.src.Application.Categories.Validators
+﻿namespace MarketNet.Application.Categories.Validators
 {
 
     using FluentValidation;
-    using MarketNet.src.Application.Categories.Dto;
+    using MarketNet.Application.Categories.Dto;
 
     public class CreateCategoryCommandValidator : AbstractValidator<CategoryDto>
     {

@@ -1,10 +1,10 @@
-﻿using MarketNet.src.Application.Categories.Commands;
-using MarketNet.src.Application.Categories.Dto;
-using MarketNet.src.Application.Categories.Queries;
+﻿using MarketNet.Application.Categories.Commands;
+using MarketNet.Application.Categories.Dto;
+using MarketNet.Application.Categories.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MarketNet.src.WebApi.Controllers
+namespace MarketNet.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

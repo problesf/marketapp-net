@@ -1,11 +1,11 @@
 using AutoMapper;
-using MarketNet.src.Application.Categories.Dto;
-using MarketNet.src.Domain.Entities.Products;
-using MarketNet.src.Domain.Exceptions.Categories;
-using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.Application.Categories.Dto;
+using MarketNet.Domain.Entities.Products;
+using MarketNet.Domain.Exceptions.Categories;
+using MarketNet.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Categories.Commands
+namespace MarketNet.Application.Categories.Commands
 {
     public record UpdateCategoryCommand : IRequest<CategoryDto>
     {

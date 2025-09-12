@@ -1,6 +1,6 @@
-﻿using MarketNet.src.Domain.entities.Reviews;
+﻿using MarketNet.Domain.entities.Reviews;
 
-namespace MarketNet.src.Domain.entities.Customers
+namespace MarketNet.Domain.entities.Customers
 {
     public class Customer
     {
@@ -21,5 +21,16 @@ namespace MarketNet.src.Domain.entities.Customers
         public ICollection<Address> Addresses { get; set; }
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+        public Customer(long id, string email, string fullName, long defaultBillingAddressId, Address defaultBillingAddress, long defaultShippingAddressId, Address defaultShippingAddress, ICollection<Address> addresses)
+        {
+            Id = id;
+            Email = email;
+            FullName = fullName;
+            DefaultBillingAddressId = defaultBillingAddressId;
+            DefaultBillingAddress = defaultBillingAddress;
+            DefaultShippingAddressId = defaultShippingAddressId;
+            DefaultShippingAddress = defaultShippingAddress;
+            Addresses = addresses;
+        }
     }
 }

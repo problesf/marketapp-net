@@ -1,6 +1,6 @@
-﻿using MarketNet.src.Application.Products.Commands;
-using MarketNet.src.Application.Products.Queries;
-using MarketNet.src.WebApi.Controllers;
+﻿using MarketNet.Application.Products.Commands;
+using MarketNet.Application.Products.Queries;
+using MarketNet.WebApi.Controllers;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -35,7 +35,7 @@ namespace Application.UnitTest.src.WebApi.Controllers
                 TaxRate = taxRate,
                 Currency = currency
             };
-            var results = actual.create(command);
+            var results = actual.Create(command);
             _mediatorMock.Verify(x => x.Send(It.Is<CreateProductCommand>(c => JsonConvert.SerializeObject(c) == JsonConvert.SerializeObject(command)), It.IsAny<CancellationToken>()), Times.Once());
         }
 
@@ -59,7 +59,7 @@ namespace Application.UnitTest.src.WebApi.Controllers
                 TaxRate = taxRate,
                 Currency = currency
             };
-            var results = actual.update(command);
+            var results = actual.Update(command);
             _mediatorMock.Verify(x => x.Send(It.Is<UpdateProductCommand>(c => JsonConvert.SerializeObject(c) == JsonConvert.SerializeObject(command)), It.IsAny<CancellationToken>()), Times.Once());
         }
 

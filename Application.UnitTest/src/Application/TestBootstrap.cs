@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MarketNet.src.Infraestructure.Mappers;
+using MarketNet.Infraestructure.Mappers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.UnitTest.src.Application;

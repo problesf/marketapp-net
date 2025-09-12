@@ -1,7 +1,7 @@
-﻿using MarketNet.src.Domain.Enums;
+﻿using MarketNet.Domain.Enums;
 using Microsoft.VisualBasic;
 
-namespace MarketNet.src.Domain.Entities.Order
+namespace MarketNet.Domain.Entities.Order
 {
     public class Payment
     {

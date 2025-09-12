@@ -1,6 +1,6 @@
-﻿using MarketNet.src.Application.Categories.Dto;
+﻿using MarketNet.Application.Categories.Dto;
 
-namespace MarketNet.src.Application.Products.Dto
+namespace MarketNet.Application.Products.Dto
 {
     public class ProductDto
     {

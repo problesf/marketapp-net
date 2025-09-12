@@ -1,11 +1,11 @@
 using AutoMapper;
-using MarketNet.src.Application.Categories.Dto;
-using MarketNet.src.Domain.Entities.Products;
-using MarketNet.src.Domain.Exceptions.Categories;
-using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.Application.Categories.Dto;
+using MarketNet.Domain.Entities.Products;
+using MarketNet.Domain.Exceptions.Categories;
+using MarketNet.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Categories.Commands
+namespace MarketNet.Application.Categories.Commands
 {
     public record CreateCategoryCommand : IRequest<long>
     {
@@ -16,6 +16,7 @@ namespace MarketNet.src.Application.Categories.Commands
         public long? ParentCategoryId { get; set; }
         public CategoryDto? ParentCategory { get; set; }
         public ICollection<CategoryDto> ChildCategories { get; set; } = new List<CategoryDto>();
+        
     }
 
     public class CreateCategoryCommandCommandHandler(ICategoryRepository categoryRepository, IMapper mapper) : IRequestHandler<CreateCategoryCommand, long>
@@ -41,14 +42,14 @@ namespace MarketNet.src.Application.Categories.Commands
                     }
                 }
             }
-            Category newCategory = new Category
-            {
-                Slug = request.Slug,
-                Name = request.Name,
-                Description = request.Description,
-                ParentCategoryId = request.ParentCategoryId,
-                ChildCategories = newCategories
-            };
+            Category newCategory = new Category(
+                null,                        
+                request.Name,
+                request.Slug,
+                request.Description,
+                request.ParentCategoryId,
+                null                
+            );
             long id = await categoryRepository.AddAsync(newCategory);
             return id;
 

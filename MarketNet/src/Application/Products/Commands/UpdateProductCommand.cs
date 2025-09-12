@@ -1,11 +1,11 @@
 using AutoMapper;
-using MarketNet.src.Application.Products.Dto;
-using MarketNet.src.Domain.Entities.Products;
-using MarketNet.src.Domain.Exceptions.Products;
-using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.Application.Products.Dto;
+using MarketNet.Domain.Entities.Products;
+using MarketNet.Domain.Exceptions.Products;
+using MarketNet.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Products.Commands
+namespace MarketNet.Application.Products.Commands
 {
     public record UpdateProductCommand : IRequest<ProductDto>
     {
@@ -18,7 +18,7 @@ namespace MarketNet.src.Application.Products.Commands
         public string? Currency { get; init; }
     }
 
-    public class UpdateProductCommanddHandler(IProductRepository productRepository, IMapper mapper) : IRequestHandler<UpdateProductCommand, ProductDto>
+    public class UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper) : IRequestHandler<UpdateProductCommand, ProductDto>
     {
 
         public async Task<ProductDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ namespace MarketNet.src.Application.Products.Commands
             Product product = await productRepository.SearchByProductCode(request.Code);
             if (product == null)
             {
-                throw new ProductNotFoundException($"Product con código de producto {request.Code}");
+                throw new ProductNotFoundException($"Product con cï¿½digo de producto {request.Code}");
             }
 
             if (request.Name != null)

@@ -1,10 +1,10 @@
 ﻿
 
-using MarketNet.src.Domain.Shared;
-using MarketNet.src.Infraestructure.Persistence;
+using MarketNet.Domain.Shared;
+using MarketNet.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarketNet.src.Infraestructure.Repositories.Impl
+namespace MarketNet.Infraestructure.Repositories.Impl
 {
     public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {
@@ -31,7 +31,7 @@ namespace MarketNet.src.Infraestructure.Repositories.Impl
         {
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
-            return entity.Id;
+            return entity.Id.Value;
         }
 
         public async Task UpdateAsync(TEntity entity)
@@ -41,7 +41,7 @@ namespace MarketNet.src.Infraestructure.Repositories.Impl
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(long id)
         {
             var entity = await _dbSet.FindAsync(id);
             if (entity != null)

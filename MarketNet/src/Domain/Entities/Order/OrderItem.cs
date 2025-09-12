@@ -1,6 +1,6 @@
-﻿using MarketNet.src.Domain.Entities.Products;
+﻿using MarketNet.Domain.Entities.Products;
 
-namespace MarketNet.src.Domain.Entities.Order
+namespace MarketNet.Domain.Entities.Order
 {
     public class OrderItem
     {

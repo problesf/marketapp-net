@@ -1,8 +1,8 @@
-﻿namespace MarketNet.src.Application.Products.Validators
+﻿namespace MarketNet.Application.Products.Validators
 {
 
     using FluentValidation;
-    using MarketNet.src.Application.Products.Commands;
+    using MarketNet.Application.Products.Commands;
 
     public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
     {

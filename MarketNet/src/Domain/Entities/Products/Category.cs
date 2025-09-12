@@ -1,16 +1,19 @@
-﻿using MarketNet.src.Domain.Shared;
+﻿using MarketNet.Domain.Shared;
 
-namespace MarketNet.src.Domain.Entities.Products
+namespace MarketNet.Domain.Entities.Products
 {
     public class Category : IEntity
     {
-        public Category()
+        public Category(long? id, string name, string slug, string description, long? parentCategoryId, Category? parentCategory)
         {
-            ChildCategories = new List<Category>();
-            Products = new List<Product>();
+            Id = id;
+            Name = name;
+            Slug = slug;
+            Description = description;
+            ParentCategoryId = parentCategoryId;
         }
 
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
         public string Description { get; set; }

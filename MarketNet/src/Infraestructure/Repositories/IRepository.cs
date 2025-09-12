@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Infraestructure.Repositories
+﻿namespace MarketNet.Infraestructure.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
@@ -6,6 +6,6 @@
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<long> AddAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(long id);
     }
 }

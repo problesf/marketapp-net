@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Application.Products.Dto
+﻿namespace MarketNet.Application.Products.Dto
 {
     public record ProductSearchCriteria
     {

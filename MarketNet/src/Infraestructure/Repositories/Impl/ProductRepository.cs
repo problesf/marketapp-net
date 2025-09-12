@@ -1,9 +1,9 @@
-﻿using MarketNet.src.Application.Products.Dto;
-using MarketNet.src.Domain.Entities.Products;
-using MarketNet.src.Infraestructure.Persistence;
+﻿using MarketNet.Application.Products.Dto;
+using MarketNet.Domain.Entities.Products;
+using MarketNet.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarketNet.src.Infraestructure.Repositories.Impl
+namespace MarketNet.Infraestructure.Repositories.Impl
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {

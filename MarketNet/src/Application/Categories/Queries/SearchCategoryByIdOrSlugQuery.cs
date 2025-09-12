@@ -1,11 +1,11 @@
 using AutoMapper;
-using MarketNet.src.Application.Categories.Dto;
-using MarketNet.src.Domain.Entities.Products;
-using MarketNet.src.Domain.Exceptions.Categories;
-using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.Application.Categories.Dto;
+using MarketNet.Domain.Entities.Products;
+using MarketNet.Domain.Exceptions.Categories;
+using MarketNet.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Categories.Queries
+namespace MarketNet.Application.Categories.Queries
 {
     public record SearchCategoryByIdOrSlugQuery : IRequest<CategoryDto>
     {
@@ -35,7 +35,7 @@ namespace MarketNet.src.Application.Categories.Queries
             }
             else
             {
-                throw new ArgumentException("Debes proporcionar al menos Código o Slug de la categoria");
+                throw new ArgumentException("Debes proporcionar al menos Cï¿½digo o Slug de la categoria");
             }
 
 

@@ -1,10 +1,10 @@
-﻿using MarketNet.src.Application.Products.Commands;
-using MarketNet.src.Application.Products.Dto;
-using MarketNet.src.Application.Products.Queries;
+﻿using MarketNet.Application.Products.Commands;
+using MarketNet.Application.Products.Dto;
+using MarketNet.Application.Products.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MarketNet.src.WebApi.Controllers
+namespace MarketNet.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -48,7 +48,7 @@ namespace MarketNet.src.WebApi.Controllers
         {
             return await _mediator.Send(command);
         }
-
+       
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -58,5 +58,36 @@ namespace MarketNet.src.WebApi.Controllers
         {
             return await _mediator.Send(command);
         }
+        
+        [HttpDelete("{code}")]
+        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProductDto>> DeleteByCode(
+            [FromRoute] string code,
+            CancellationToken cancellationToken)
+        {
+                return await _mediator.Send(new DeleteProductCommand { Code = code }, cancellationToken);
+        }
+        [HttpPut("/activate")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        public async Task<ActionResult<ProductDto>> Activate(ActivateProductCommand command)
+        {
+            return await _mediator.Send(command);
+        }
+        
+        [HttpPut("/deactivate")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        public async Task<ActionResult<ProductDto>> Deactivate(DeactivateProductCommand command)
+        {
+            return await _mediator.Send(command);
+        }
+        
+        
     }
 }

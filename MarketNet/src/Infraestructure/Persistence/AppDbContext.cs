@@ -2,15 +2,15 @@
 using System.Reflection.Emit;
 using System.Text;
 using System.Text.RegularExpressions;
-using MarketNet.src.Domain.entities.Customers;
-using MarketNet.src.Domain.entities.Inventory;
-using MarketNet.src.Domain.entities.Reviews;
-using MarketNet.src.Domain.Entities.Order;
-using MarketNet.src.Domain.Entities.Products;
+using MarketNet.Domain.entities.Customers;
+using MarketNet.Domain.entities.Inventory;
+using MarketNet.Domain.entities.Reviews;
+using MarketNet.Domain.Entities.Order;
+using MarketNet.Domain.Entities.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace MarketNet.src.Infraestructure.Persistence
+namespace MarketNet.Infraestructure.Persistence
 {
     public class AppDbContext : DbContext
     {

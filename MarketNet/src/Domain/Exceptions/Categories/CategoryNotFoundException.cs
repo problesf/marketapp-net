@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Domain.Exceptions.Categories
+﻿namespace MarketNet.Domain.Exceptions.Categories
 {
     [Serializable]
     class CategoryNotFoundException : Exception

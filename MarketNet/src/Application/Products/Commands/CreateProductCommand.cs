@@ -1,11 +1,11 @@
 using AutoMapper;
-using MarketNet.src.Domain.Entities.Products;
-using MarketNet.src.Domain.Exceptions.Categories;
-using MarketNet.src.Domain.Exceptions.Products;
-using MarketNet.src.Infraestructure.Repositories;
+using MarketNet.Domain.Entities.Products;
+using MarketNet.Domain.Exceptions.Categories;
+using MarketNet.Domain.Exceptions.Products;
+using MarketNet.Infraestructure.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Products.Commands
+namespace MarketNet.Application.Products.Commands
 {
     public record CreateProductCommand : IRequest<long>
     {
@@ -17,7 +17,7 @@ namespace MarketNet.src.Application.Products.Commands
         public decimal TaxRate { get; init; }
         public string Currency { get; init; }
 
-        public List<long> categoriesId { get; set; }
+        public List<long>? categoriesId { get; set; }
     }
 
     public class CreateProductCommandHandler(IProductRepository productRepository,
@@ -30,35 +30,35 @@ namespace MarketNet.src.Application.Products.Commands
             Product exist = await productRepository.SearchByProductCode(request.Code);
             if (exist != null)
             {
-                throw new ProductExistException($"Ya existe un product con código {request.Code}.");
+                throw new ProductExistException($"Ya existe un product con cï¿½digo {request.Code}.");
             }
 
             ICollection<Category> productCategories = new List<Category>();
-
-            foreach (long idCategory in request.categoriesId)
+            if (request.categoriesId != null)
             {
-                Category category = await categoryRepository.GetByIdAsync(idCategory);
-                if (category == null)
+                foreach (long idCategory in request.categoriesId)
                 {
-                    throw new CategoryNotFoundException($"Categoria con ID {idCategory} no encontrado");
+                    Category category = await categoryRepository.GetByIdAsync(idCategory);
+                    if (category == null)
+                    {
+                        throw new CategoryNotFoundException($"Categoria con ID {idCategory} no encontrado");
+                    }
+                    productCategories.Add(category);
                 }
-                productCategories.Add(category);
             }
-            Product newProduct = new Product
-            {
-                Code = request.Code,
-                Name = request.Name,
-                Description = request.Description,
-                Price = request.Price,
-                TaxRate = request.TaxRate,
-                Stock = request.Stock,
-                Currency = request.Currency,
-                Categories = productCategories,
-                IsActive = true
-            };
-
-            long id = await productRepository.AddAsync(newProduct);
-            return id;
+            Product newProduct = new Product(
+                null, 
+                request.Code,
+                request.Name,
+                request.Description,
+                request.Price,
+                request.Stock,
+                request.TaxRate,
+                request.Currency,
+                true
+            );
+            newProduct.Categories = productCategories;
+            return await productRepository.AddAsync(newProduct); ;
 
         }
 

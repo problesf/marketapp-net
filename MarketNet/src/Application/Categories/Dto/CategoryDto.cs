@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Application.Categories.Dto
+﻿namespace MarketNet.Application.Categories.Dto
 {
     public sealed class CategoryDto
     {
