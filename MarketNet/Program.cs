@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
+using Swashbuckle.AspNetCore.Filters;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //AUTENTICACION//
@@ -95,6 +97,8 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
+    c.ExampleFilters();
+
 });
 
 
@@ -110,6 +114,7 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseException
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<FluentValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<BaseExceptionHandler>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 builder.Services.Configure<JwtParameters>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<IJwtTokenService, JwtTokenServiceImpl>();

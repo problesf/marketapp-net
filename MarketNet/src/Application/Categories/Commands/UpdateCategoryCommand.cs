@@ -14,8 +14,8 @@ namespace MarketNet.Application.Categories.Commands
         public string Description { get; set; }
 
         public long? ParentCategoryId { get; set; }
-        public virtual CategoryDto ParentCategory { get; set; }
-        public virtual ICollection<CategoryDto> ChildCategories { get; set; } = new List<CategoryDto>();
+        public CategoryBriefDto ParentCategory { get; set; }
+        public ICollection<CategoryChildDto> ChildCategories { get; set; } = new List<CategoryChildDto>();
     }
 
     public class UpdateCategoryCommandHandler(ICategoryRepository categoryRepository, IMapper mapper) : IRequestHandler<UpdateCategoryCommand, CategoryDto>

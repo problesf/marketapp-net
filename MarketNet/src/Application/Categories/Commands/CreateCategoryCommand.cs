@@ -14,8 +14,8 @@ namespace MarketNet.Application.Categories.Commands
         public string Description { get; set; }
 
         public long? ParentCategoryId { get; set; }
-        public CategoryDto? ParentCategory { get; set; }
-        public ICollection<CategoryDto> ChildCategories { get; set; } = new List<CategoryDto>();
+        public CategoryBriefDto? ParentCategory { get; set; }
+        public ICollection<CategoryChildDto> ChildCategories { get; set; } = new List<CategoryChildDto>();
 
     }
 
@@ -33,7 +33,7 @@ namespace MarketNet.Application.Categories.Commands
             List<Category> newCategories = [];
             if (request.ChildCategories != null && request.ChildCategories.Any())
             {
-                foreach (CategoryDto categoryDto in request.ChildCategories)
+                foreach (CategoryChildDto categoryDto in request.ChildCategories)
                 {
                     Category category = await categoryRepository.SearchById(categoryDto.Id);
                     if (category != null)

@@ -1,8 +1,10 @@
 ﻿using MarketNet.Application.Categories.Commands;
 using MarketNet.Application.Categories.Dto;
 using MarketNet.Application.Categories.Queries;
+using MarketNet.WebApi.Swagger.Examples.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace MarketNet.WebApi.Controllers
 {
@@ -22,6 +24,8 @@ namespace MarketNet.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerRequestExample(typeof(SearchCategoriesQuery), typeof(SearchCategoriesQueryExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CategoryListExample))]
         public async Task<ActionResult<List<CategoryDto>>> Search([FromQuery] SearchCategoriesQuery query)
         {
             return await _mediator.Send(query);
@@ -32,6 +36,8 @@ namespace MarketNet.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerRequestExample(typeof(SearchCategoryByIdOrSlugQuery), typeof(SearchCategoryByIdOrSlugQueryExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(CategoryDtoExample))]
         public async Task<ActionResult<CategoryDto>> SearchByIdentifiers([FromQuery] SearchCategoryByIdOrSlugQuery request)
         {
             return await _mediator.Send(request);
