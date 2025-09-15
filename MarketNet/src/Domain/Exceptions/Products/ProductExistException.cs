@@ -1,17 +1,17 @@
-﻿namespace MarketNet.Domain.Exceptions.Products
+﻿using MarketNet.Domain.Exceptions.Base;
+
+namespace MarketNet.Domain.Exceptions.Products
 {
     [Serializable]
-    class ProductExistException : Exception
+    public class ProductExistException : BaseException
     {
-        public ProductExistException()
+        public ProductExistException(string code)
+            : base("product_exists", 409, $"Ya existe un producto con código {code}.")
         {
         }
 
-        public ProductExistException(string? message) : base(message)
-        {
-        }
-
-        public ProductExistException(string? message, Exception? innerException) : base(message, innerException)
+        public ProductExistException(string message, Exception? inner)
+            : base("product_exists", 409, message, inner)
         {
         }
     }

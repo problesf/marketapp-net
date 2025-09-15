@@ -16,7 +16,7 @@ namespace MarketNet.Domain.entities.Inventory
         public Reason Reason { get; set; }
 
         public string Reference { get; set; }
-
+        public InventoryMovement(){}
         public InventoryMovement(long id, long productId, Product product, int quantity, Reason reason, string reference)
         {
             Id = id;

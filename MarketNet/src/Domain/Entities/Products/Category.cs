@@ -4,9 +4,10 @@ namespace MarketNet.Domain.Entities.Products
 {
     public class Category : IEntity
     {
-        public Category(long? id, string name, string slug, string description, long? parentCategoryId, Category? parentCategory)
+        private Category() { }
+
+        public Category(string name, string slug, string description, long? parentCategoryId)
         {
-            Id = id;
             Name = name;
             Slug = slug;
             Description = description;

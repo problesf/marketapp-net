@@ -1,6 +1,7 @@
 ﻿using MarketNet.Domain.entities.Inventory;
 using MarketNet.Domain.entities.Reviews;
 using MarketNet.Domain.Entities.Order;
+using MarketNet.Domain.Entities.User;
 using MarketNet.Domain.Shared;
 
 namespace MarketNet.Domain.Entities.Products
@@ -18,15 +19,20 @@ namespace MarketNet.Domain.Entities.Products
         public decimal TaxRate { get; set; }
         public string Currency { get; set; }
         public bool IsActive { get; set; }
+        public long SellerProfileId { get; private set; }
+        public SellerProfile Seller { get; private set; } = null!;
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         public ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
-        
 
-        public Product(long? id, string code, string name, string description, decimal price, int stock, decimal taxRate, string currency, bool isActive)
+
+        public Product()
         {
-            Id = id;
+
+        }
+        public Product(string code, string name, string description, decimal price, int stock, decimal taxRate, string currency, bool isActive, long sellerProfileId)
+        {
             Code = code;
             Name = name;
             Description = description;
@@ -35,6 +41,7 @@ namespace MarketNet.Domain.Entities.Products
             TaxRate = taxRate;
             Currency = currency;
             IsActive = isActive;
+            SellerProfileId = sellerProfileId;
         }
     }
 }

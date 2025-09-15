@@ -1,31 +1,119 @@
+using System.Text;
 using FluentValidation;
 using MarketNet.Application.Behaviors;
 using MarketNet.Application.Categories.Validators;
+using MarketNet.Application.Common.Interfaces;
 using MarketNet.Infraestructure.Persistence;
 using MarketNet.Infraestructure.Repositories;
 using MarketNet.Infraestructure.Repositories.Impl;
+using MarketNet.Infrastructure.Auth;
+using MarketNet.src.Infraestructure.Auth.Handlers.Products;
+using MarketNet.src.Infraestructure.Auth.Parameters;
+using MarketNet.src.Infraestructure.Auth.Requirements.Products;
+using MarketNet.src.Infraestructure.Auth.Services;
+using MarketNet.src.Infraestructure.Auth.Services.Impl;
+using MarketNet.src.Infraestructure.Repositories;
 using MarketNet.WebApi.Middleware;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//AUTENTICACION//
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!));
+var issuer = builder.Configuration["Jwt:Issuer"]!;
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = issuer,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = key,
+            ValidateLifetime = true
+        };
+    });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireCustomer", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Customer");
+    });
+
+    options.AddPolicy("RequireSeller", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Seller");
+    });
+
+    options.AddPolicy("ProductOwnerOnly", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Seller");
+        policy.AddRequirements(new ProductOwnerRequirement());
+    });
+});
+
+builder.Services.AddScoped<IAuthorizationHandler, ProductOwnerHandler>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "MarketNet API", Version = "v1" });
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Pon aquí tu JWT con el formato: Bearer {token}"
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+
+builder.Services.AddScoped<IProductRepository, ProductRepositoryImpl>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepositoryImpl>();
+builder.Services.AddScoped<IUserRepository, UserRepositoryImpl>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryCommandValidator>();
 
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(BaseExceptionBehavior<,>));
+
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<FluentValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<BaseExceptionHandler>();
 
+builder.Services.Configure<JwtParameters>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddScoped<IJwtTokenService, JwtTokenServiceImpl>();
 
 builder.Services.AddAutoMapper(cfg => { }, typeof(Program).Assembly);
 builder.Services.AddMediatR(cfg =>
@@ -40,6 +128,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(o => o.SuppressModelStateInvalidFilter = true);
 
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,7 +141,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

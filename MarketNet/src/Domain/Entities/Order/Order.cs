@@ -1,4 +1,5 @@
-﻿using MarketNet.Domain.Enums;
+﻿using MarketNet.Domain.Entities.User;
+using MarketNet.Domain.Enums;
 using MarketNet.Domain.valueObjects;
 using Microsoft.VisualBasic;
 
@@ -9,9 +10,7 @@ namespace MarketNet.Domain.Entities.Order
         public long Id { get; set; }
 
         public int OrderNumber { get; set; }
-
-        public long CustomerId { get; set; }
-
+        
         public Status Status { get; set; }
 
         public decimal SubTotal { get; set; }
@@ -41,5 +40,9 @@ namespace MarketNet.Domain.Entities.Order
         public ICollection<Shipment> Shipments { get; set; }
         public AddressSnapshot ShippingAddressSnapshot { get; }
         public AddressSnapshot BillingAddressSnapshot { get; }
+        
+        public long CustomerProfileId { get; private set; }
+        
+        public CustomerProfile Customer { get; private set; } = null!;
     }
 }

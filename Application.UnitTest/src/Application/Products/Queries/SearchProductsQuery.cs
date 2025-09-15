@@ -1,8 +1,8 @@
 ﻿
 using MarketNet.Application.Products.Dto;
+using MarketNet.Application.Products.Queries;
 using MarketNet.Domain.Entities.Products;
 using MarketNet.Infraestructure.Repositories;
-using MarketNet.Application.Products.Queries;
 
 namespace Application.UnitTest.src.Application.Products.Queries;
 
@@ -40,9 +40,9 @@ public class SearchProductsQueryHandlerTests
 
         var products = new List<Product>
         {
-            new Product(1, "C-01", "Phone X", "Smartphone básico", 299m, 10, 0.21m, "EUR", true)
+            new Product("C-01", "Phone X", "Smartphone básico", 299m, 10, 0.21m, "EUR", true,1)
         };
-     
+
 
         ProductSearchCriteria? captured = null;
 
@@ -56,7 +56,7 @@ public class SearchProductsQueryHandlerTests
 
         result.Should().NotBeNull();
         result.Should().HaveCount(1);
-        result[0].Id.Should().Be(1);
+        result[0].Id.Should().Be(0);
         result[0].Code.Should().Be("C-01");
         result[0].Name.Should().Be("Phone X");
         result[0].Price.Should().Be(299m);

@@ -1,4 +1,5 @@
 using AutoMapper;
+using MarketNet.Application.Common.Interfaces;
 using MarketNet.Domain.Entities.Products;
 using MarketNet.Domain.Exceptions.Categories;
 using MarketNet.Domain.Exceptions.Products;
@@ -22,11 +23,13 @@ namespace MarketNet.Application.Products.Commands
 
     public class CreateProductCommandHandler(IProductRepository productRepository,
         ICategoryRepository categoryRepository,
-        IMapper mapper) : IRequestHandler<CreateProductCommand, long>
+        IMapper mapper, IUserContext userContext) : IRequestHandler<CreateProductCommand, long>
     {
 
         public async Task<long> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
+            var sellerId = userContext.UserId ?? throw new UnauthorizedAccessException();
+
             Product exist = await productRepository.SearchByProductCode(request.Code);
             if (exist != null)
             {
@@ -47,7 +50,6 @@ namespace MarketNet.Application.Products.Commands
                 }
             }
             Product newProduct = new Product(
-                null, 
                 request.Code,
                 request.Name,
                 request.Description,
@@ -55,10 +57,13 @@ namespace MarketNet.Application.Products.Commands
                 request.Stock,
                 request.TaxRate,
                 request.Currency,
-                true
+                true,
+                sellerId
             );
             newProduct.Categories = productCategories;
-            return await productRepository.AddAsync(newProduct); ;
+            await productRepository.AddAsync(newProduct);
+            await productRepository.SaveAsync(cancellationToken);
+            return newProduct.Id.Value;
 
         }
 

@@ -9,7 +9,7 @@ namespace MarketNet.Application.Products.Commands
 {
     public record UpdateProductCommand : IRequest<ProductDto>
     {
-        public string Code { get; init; }
+        public long? Id { get; set; }
         public string? Name { get; init; }
         public string? Description { get; init; }
         public decimal? Price { get; init; }
@@ -24,10 +24,10 @@ namespace MarketNet.Application.Products.Commands
         public async Task<ProductDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
 
-            Product product = await productRepository.SearchByProductCode(request.Code);
+            Product product = await productRepository.GetByIdAsync(request.Id.Value);
             if (product == null)
             {
-                throw new ProductNotFoundException($"Product con c�digo de producto {request.Code}");
+                throw new ProductNotFoundException($"Product con id {request.Id} no existe");
             }
 
             if (request.Name != null)

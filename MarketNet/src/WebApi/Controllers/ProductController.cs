@@ -2,6 +2,7 @@
 using MarketNet.Application.Products.Dto;
 using MarketNet.Application.Products.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MarketNet.WebApi.Controllers
@@ -40,6 +41,7 @@ namespace MarketNet.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Seller")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(long))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -48,46 +50,52 @@ namespace MarketNet.WebApi.Controllers
         {
             return await _mediator.Send(command);
         }
-       
-        [HttpPut]
+
+        [HttpPut("{id:long}")]
+        [Authorize(Policy = "ProductOwnerOnly")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<ProductDto>> Update(UpdateProductCommand command)
+        public async Task<ActionResult<ProductDto>> Update([FromRoute] long id, UpdateProductCommand command)
         {
+            command.Id = id;
             return await _mediator.Send(command);
         }
-        
-        [HttpDelete("{code}")]
+
+        [HttpDelete("{id:long}")]
+        [Authorize(Policy = "ProductOwnerOnly")]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductDto>> DeleteByCode(
-            [FromRoute] string code,
+            [FromRoute] long id,
             CancellationToken cancellationToken)
         {
-                return await _mediator.Send(new DeleteProductCommand { Code = code }, cancellationToken);
+            return await _mediator.Send(new DeleteProductCommand { Id = id }, cancellationToken);
         }
-        [HttpPut("/activate")]
+        [HttpPut("activate/{id:long}")]
+        [Authorize(Policy = "ProductOwnerOnly")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<ProductDto>> Activate(ActivateProductCommand command)
+        public async Task<ActionResult<ProductDto>> Activate([FromRoute] long id)
         {
-            return await _mediator.Send(command);
+            return await _mediator.Send(new ActivateProductCommand { Id = id });
         }
-        
-        [HttpPut("/deactivate")]
+
+        [HttpPut("deactivate/{id:long}")]
+        [Authorize(Roles = "Seller")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<ProductDto>> Deactivate(DeactivateProductCommand command)
+        public async Task<ActionResult<ProductDto>> Deactivate([FromRoute] long id)
         {
-            return await _mediator.Send(command);
+
+            return await _mediator.Send(new DeactivateProductCommand { Id = id });
         }
-        
-        
+
+
     }
 }

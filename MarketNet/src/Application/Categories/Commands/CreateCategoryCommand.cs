@@ -16,7 +16,7 @@ namespace MarketNet.Application.Categories.Commands
         public long? ParentCategoryId { get; set; }
         public CategoryDto? ParentCategory { get; set; }
         public ICollection<CategoryDto> ChildCategories { get; set; } = new List<CategoryDto>();
-        
+
     }
 
     public class CreateCategoryCommandCommandHandler(ICategoryRepository categoryRepository, IMapper mapper) : IRequestHandler<CreateCategoryCommand, long>
@@ -43,15 +43,14 @@ namespace MarketNet.Application.Categories.Commands
                 }
             }
             Category newCategory = new Category(
-                null,                        
                 request.Name,
                 request.Slug,
                 request.Description,
-                request.ParentCategoryId,
-                null                
+                request.ParentCategoryId
             );
-            long id = await categoryRepository.AddAsync(newCategory);
-            return id;
+            await categoryRepository.AddAsync(newCategory);
+            await categoryRepository.SaveAsync(cancellationToken);
+            return newCategory.Id.Value;
 
         }
 

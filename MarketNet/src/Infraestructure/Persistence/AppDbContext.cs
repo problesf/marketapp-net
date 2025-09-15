@@ -1,14 +1,12 @@
 ﻿using System.Globalization;
-using System.Reflection.Emit;
 using System.Text;
-using System.Text.RegularExpressions;
 using MarketNet.Domain.entities.Customers;
 using MarketNet.Domain.entities.Inventory;
 using MarketNet.Domain.entities.Reviews;
 using MarketNet.Domain.Entities.Order;
 using MarketNet.Domain.Entities.Products;
+using MarketNet.Domain.Entities.User;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MarketNet.Infraestructure.Persistence
 {
@@ -16,141 +14,104 @@ namespace MarketNet.Infraestructure.Persistence
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Order> Orders => Set<Order>();
-        public DbSet<OrderItem> OrderItem => Set<OrderItem>();
-        public DbSet<Payment> Payments => Set<Payment>();
-        public DbSet<Shipment> Shipment => Set<Shipment>();
+        public DbSet<User> Users => Set<User>();
+        public DbSet<CustomerProfile> CustomerProfiles => Set<CustomerProfile>();
+        public DbSet<SellerProfile> SellerProfiles => Set<SellerProfile>();
 
         public DbSet<Product> Products => Set<Product>();
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<Order> Orders => Set<Order>();
+        public DbSet<OrderItem> OrderItem => Set<OrderItem>();
+        public DbSet<Payment> Payments => Set<Payment>();
+        public DbSet<Shipment> Shipment => Set<Shipment>();
         public DbSet<InventoryMovement> InventoryMovements => Set<InventoryMovement>();
-        public DbSet<Customer> Customers => Set<Customer>();
         public DbSet<Review> Reviews => Set<Review>();
 
         protected override void OnModelCreating(ModelBuilder model)
         {
             base.OnModelCreating(model);
 
-            // PRODUCT
-            model.Entity<Product>(entity =>
+            // ========== USER ==========
+            model.Entity<User>(b =>
             {
-                entity.ToTable("product");
-                entity.HasKey(p => p.Id);
+                b.ToTable("users");
+                b.HasKey(u => u.Id);
 
-                entity.Property(p => p.Code)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                b.Property(u => u.Email).IsRequired().HasMaxLength(255);
+                b.HasIndex(u => u.Email).IsUnique();
 
-                entity.Property(p => p.Stock)
-                    .IsRequired();
 
-                entity.Property(p => p.Description)
-                    .HasMaxLength(1000);
+                b.HasOne(u => u.CustomerProfile)
+                 .WithOne(cp => cp.User)
+                 .HasForeignKey<CustomerProfile>(cp => cp.UserId)
+                 .OnDelete(DeleteBehavior.Cascade);
 
-                entity.Property(p => p.Price)
-                    .IsRequired()
-                    .HasColumnType("decimal(18,2)");
-
-                entity.Property(p => p.IsActive)
-                    .IsRequired();
-
-                entity.Property(p => p.Currency)
-                    .IsRequired()
-                    .HasMaxLength(3)
-                    .IsFixedLength();
-
-                entity.Property(p => p.TaxRate)
-                    .IsRequired()
-                    .HasColumnType("decimal(5,2)");
-
-                entity.HasIndex(e => e.Code).IsUnique();
-
-                entity.HasMany(p => p.Categories).WithMany(c => c.Products);
+                b.HasOne(u => u.SellerProfile)
+                 .WithOne(sp => sp.User)
+                 .HasForeignKey<SellerProfile>(sp => sp.UserId)
+                 .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // CATEGORY
-            model.Entity<Category>(entity =>
+            // ========== CUSTOMER PROFILE ==========
+            model.Entity<CustomerProfile>(b =>
             {
-                entity.ToTable("categories");
-                entity.HasKey(c => c.Id);
+                b.ToTable("customer_profiles");
+                b.HasKey(cp => cp.Id);
 
-                entity.Property(c => c.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                b.HasIndex(cp => cp.UserId).IsUnique();
 
-                entity.Property(c => c.Slug)
-                    .IsRequired()
-                    .HasMaxLength(100);
+                b.HasMany(cp => cp.Addresses)
+                 .WithOne(a => a.CustomerProfile)
+                 .HasForeignKey(a => a.CustomerProfileId)
+                 .IsRequired()
+                 .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasIndex(c => c.Slug).IsUnique();
+                b.HasMany(cp => cp.Orders)
+                 .WithOne(o => o.Customer)
+                 .HasForeignKey(o => o.CustomerProfileId)
+                 .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(c => c.ParentCategory)
-                      .WithMany(c => c.ChildCategories)
-                      .HasForeignKey(c => c.ParentCategoryId)
-                      .IsRequired(false)
-                      .OnDelete(DeleteBehavior.Restrict);
+                b.HasMany(cp => cp.Reviews)
+                 .WithOne(r => r.CustomerProfile)
+                 .HasForeignKey(r => r.CustomerProfileId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+                // FKs a direcciones por defecto (nullable)
+                b.Property(cp => cp.DefaultBillingAddressId);
+                b.Property(cp => cp.DefaultShippingAddressId);
+
+                b.HasOne(cp => cp.DefaultBillingAddress)
+                 .WithMany()
+                 .HasForeignKey(cp => cp.DefaultBillingAddressId)
+                 .IsRequired(false)
+                 .OnDelete(DeleteBehavior.SetNull);
+
+                b.HasOne(cp => cp.DefaultShippingAddress)
+                 .WithMany()
+                 .HasForeignKey(cp => cp.DefaultShippingAddressId)
+                 .IsRequired(false)
+                 .OnDelete(DeleteBehavior.SetNull);
             });
 
-            // INVENTORY MOVEMENT
-            model.Entity<InventoryMovement>(entity =>
+            // ========== SELLER PROFILE ==========
+            model.Entity<SellerProfile>(b =>
             {
-                entity.ToTable("inventory_movements");
-                entity.HasKey(im => im.Id);
+                b.ToTable("seller_profiles");
+                b.HasKey(sp => sp.Id);
 
-                entity.Property(im => im.Quantity)
-                    .IsRequired();
+                b.HasIndex(sp => sp.UserId).IsUnique();
 
-                entity.Property(im => im.Reason)
-                    .IsRequired();
+                b.Property(sp => sp.StoreName).IsRequired().HasMaxLength(200);
+                b.Property(sp => sp.PayoutAccount).HasMaxLength(128);
 
-                entity.Property(im => im.Reference)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.HasOne(im => im.Product)
-                    .WithMany(p => p.InventoryMovements)
-                    .HasForeignKey(im => im.ProductId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.Restrict);
+                b.HasMany(sp => sp.Products)
+                 .WithOne(p => p.Seller)
+                 .HasForeignKey(p => p.SellerProfileId)
+                 .OnDelete(DeleteBehavior.Restrict);
             });
 
-            //CUSTOMER
-            model.Entity<Customer>(entity =>
-            {
-                entity.ToTable("customers");
-                entity.HasKey(c => c.Id);
-
-                entity.Property(c => c.Email)
-                      .IsRequired()
-                      .HasMaxLength(255);
-                entity.HasIndex(c => c.Email)
-                      .IsUnique();
-
-                entity.Property(c => c.FullName)
-                      .IsRequired()
-                      .HasMaxLength(255);
-
-                entity.HasMany(c => c.Addresses)
-                      .WithOne(a => a.Customer)
-                      .HasForeignKey(a => a.CustomerId)
-                      .IsRequired()
-                      .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(c => c.DefaultBillingAddress)
-                      .WithMany()
-                      .HasForeignKey(c => c.DefaultBillingAddressId)
-                      .IsRequired(false)
-                      .OnDelete(DeleteBehavior.SetNull);
-
-                entity.HasOne(c => c.DefaultShippingAddress)
-                      .WithMany()
-                      .HasForeignKey(c => c.DefaultShippingAddressId)
-                      .IsRequired(false)
-                      .OnDelete(DeleteBehavior.SetNull);
-            });
-
-            // ADDRESS
+            // ========== ADDRESS ==========
             model.Entity<Address>(entity =>
             {
                 entity.ToTable("addresses");
@@ -166,17 +127,76 @@ namespace MarketNet.Infraestructure.Persistence
                 entity.Property(a => a.IsDefaultBilling).HasDefaultValue(false);
                 entity.Property(a => a.IsDefaultShipping).HasDefaultValue(false);
 
-                entity.HasOne<Customer>()
-                      .WithMany(c => c.Addresses)
-                      .HasForeignKey(a => a.CustomerId)
+                entity.HasOne(a => a.CustomerProfile)
+                      .WithMany(cp => cp.Addresses)
+                      .HasForeignKey(a => a.CustomerProfileId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasIndex(a => a.CustomerId).HasDatabaseName("ix_addresses_customerid");
-                entity.HasIndex(a => new { a.CustomerId, a.IsDefaultBilling }).HasDatabaseName("ix_addresses_default_billing");
-                entity.HasIndex(a => new { a.CustomerId, a.IsDefaultShipping }).HasDatabaseName("ix_addresses_default_shipping");
+                entity.HasIndex(a => a.CustomerProfileId).HasDatabaseName("ix_addresses_customerprofileid");
+                entity.HasIndex(a => new { a.CustomerProfileId, a.IsDefaultBilling }).HasDatabaseName("ix_addresses_default_billing");
+                entity.HasIndex(a => new { a.CustomerProfileId, a.IsDefaultShipping }).HasDatabaseName("ix_addresses_default_shipping");
             });
 
-            // ORDER ITEM
+            // ========== CATEGORY ==========
+            model.Entity<Category>(entity =>
+            {
+                entity.ToTable("categories");
+                entity.HasKey(c => c.Id);
+
+                entity.Property(c => c.Name).IsRequired().HasMaxLength(50);
+                entity.Property(c => c.Slug).IsRequired().HasMaxLength(100);
+                entity.HasIndex(c => c.Slug).IsUnique();
+
+                entity.HasOne(c => c.ParentCategory)
+                      .WithMany(c => c.ChildCategories)
+                      .HasForeignKey(c => c.ParentCategoryId)
+                      .IsRequired(false)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ========== PRODUCT ==========
+            model.Entity<Product>(entity =>
+            {
+                entity.ToTable("product");
+                entity.HasKey(p => p.Id);
+
+                entity.Property(p => p.Code).IsRequired().HasMaxLength(50);
+                entity.HasIndex(e => e.Code).IsUnique();
+
+                entity.Property(p => p.Stock).IsRequired();
+                entity.Property(p => p.Description).HasMaxLength(1000);
+                entity.Property(p => p.Price).IsRequired().HasColumnType("decimal(18,2)");
+                entity.Property(p => p.IsActive).IsRequired();
+                entity.Property(p => p.Currency).IsRequired().HasMaxLength(3).IsFixedLength();
+                entity.Property(p => p.TaxRate).IsRequired().HasColumnType("decimal(5,2)");
+
+                entity.HasOne(p => p.Seller)
+                      .WithMany(sp => sp.Products)
+                      .HasForeignKey(p => p.SellerProfileId)
+                      .IsRequired()
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasMany(p => p.Categories).WithMany(c => c.Products);
+            });
+
+            // ========== INVENTORY MOVEMENT ==========
+            model.Entity<InventoryMovement>(entity =>
+            {
+                entity.ToTable("inventory_movements");
+                entity.HasKey(im => im.Id);
+
+                entity.Property(im => im.Quantity).IsRequired();
+                entity.Property(im => im.Reason).IsRequired();
+                entity.Property(im => im.Reference).IsRequired().HasMaxLength(100);
+
+                entity.HasOne(im => im.Product)
+                      .WithMany(p => p.InventoryMovements)
+                      .HasForeignKey(im => im.ProductId)
+                      .IsRequired()
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ========== ORDER ITEM ==========
             model.Entity<OrderItem>(entity =>
             {
                 entity.ToTable("order_items");
@@ -194,42 +214,30 @@ namespace MarketNet.Infraestructure.Persistence
                       .IsRequired()
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.Property(oi => oi.CodeSnapshot)
-                      .IsRequired()
-                      .HasMaxLength(50);
-
-                entity.Property(oi => oi.ProductNameSnapshot)
-                      .IsRequired()
-                      .HasMaxLength(255);
-
-                entity.Property(oi => oi.UnitPrice)
-                      .IsRequired()
-                      .HasColumnType("decimal(18,2)");
-
-                entity.Property(oi => oi.Quantity)
-                      .IsRequired();
-
-                entity.Property(oi => oi.TaxRate)
-                      .IsRequired()
-                      .HasColumnType("decimal(5,4)");
-
-                entity.Property(oi => oi.LineTotal)
-                      .IsRequired()
-                      .HasColumnType("decimal(18,2)");
+                entity.Property(oi => oi.CodeSnapshot).IsRequired().HasMaxLength(50);
+                entity.Property(oi => oi.ProductNameSnapshot).IsRequired().HasMaxLength(255);
+                entity.Property(oi => oi.UnitPrice).IsRequired().HasColumnType("decimal(18,2)");
+                entity.Property(oi => oi.Quantity).IsRequired();
+                entity.Property(oi => oi.TaxRate).IsRequired().HasColumnType("decimal(5,4)");
+                entity.Property(oi => oi.LineTotal).IsRequired().HasColumnType("decimal(18,2)");
             });
 
+            // ========== ORDER ==========
             model.Entity<Order>(entity =>
             {
                 entity.ToTable("orders");
                 entity.HasKey(o => o.Id);
 
+                entity.Property(o => o.CustomerProfileId).IsRequired();
+
+                entity.HasOne(o => o.Customer)
+                      .WithMany(cp => cp.Orders)
+                      .HasForeignKey(o => o.CustomerProfileId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
                 entity.Property(o => o.OrderNumber).IsRequired();
 
-                entity.Property(o => o.Status)
-                      .HasConversion<string>()
-                      .HasMaxLength(32)
-                      .IsUnicode(false);
-
+                entity.Property(o => o.Status).HasConversion<string>().HasMaxLength(32).IsUnicode(false);
                 entity.Property(o => o.SubTotal).HasColumnType("numeric(18,2)").IsRequired();
                 entity.Property(o => o.TaxTotal).HasColumnType("numeric(18,2)").IsRequired();
                 entity.Property(o => o.ShippingTotal).HasColumnType("numeric(18,2)").IsRequired();
@@ -258,10 +266,10 @@ namespace MarketNet.Infraestructure.Persistence
                       .HasForeignKey(s => s.OrderId)
                       .OnDelete(DeleteBehavior.Cascade);
 
+                // Snapshots owned
                 entity.OwnsOne(o => o.ShippingAddressSnapshot, sa =>
                 {
                     sa.WithOwner().HasForeignKey("OrderId");
-
                     sa.Property(x => x.Line1).HasMaxLength(200);
                     sa.Property(x => x.Line2).HasMaxLength(200);
                     sa.Property(x => x.City).HasMaxLength(120);
@@ -273,7 +281,6 @@ namespace MarketNet.Infraestructure.Persistence
                 entity.OwnsOne(o => o.BillingAddressSnapshot, ba =>
                 {
                     ba.WithOwner().HasForeignKey("OrderId");
-
                     ba.Property(x => x.Line1).HasMaxLength(200);
                     ba.Property(x => x.Line2).HasMaxLength(200);
                     ba.Property(x => x.City).HasMaxLength(120);
@@ -289,7 +296,7 @@ namespace MarketNet.Infraestructure.Persistence
                 entity.HasIndex(o => new { o.PlaceAt, o.Status }).HasDatabaseName("ix_orders_placeat_status");
             });
 
-            // PAYMENT
+            // ========== PAYMENT ==========
             model.Entity<Payment>(entity =>
             {
                 entity.ToTable("payments");
@@ -301,30 +308,15 @@ namespace MarketNet.Infraestructure.Persistence
                       .IsRequired()
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.Property(p => p.Amount)
-                      .IsRequired()
-                      .HasColumnType("decimal(18,2)");
-
-                entity.Property(p => p.Currency)
-                      .IsRequired()
-                      .HasMaxLength(3);
-
-                entity.Property(p => p.ExternalReference)
-                      .HasMaxLength(255);
-
-                entity.Property(p => p.OcurredAt)
-                      .IsRequired();
-
-                entity.Property(p => p.Provider)
-                      .HasConversion<string>()
-                      .IsRequired();
-
-                entity.Property(p => p.Status)
-                      .HasConversion<string>()
-                      .IsRequired();
+                entity.Property(p => p.Amount).IsRequired().HasColumnType("decimal(18,2)");
+                entity.Property(p => p.Currency).IsRequired().HasMaxLength(3);
+                entity.Property(p => p.ExternalReference).HasMaxLength(255);
+                entity.Property(p => p.OcurredAt).IsRequired();
+                entity.Property(p => p.Provider).HasConversion<string>().IsRequired();
+                entity.Property(p => p.Status).HasConversion<string>().IsRequired();
             });
 
-            // SHIPMENT
+            // ========== SHIPMENT ==========
             model.Entity<Shipment>(entity =>
             {
                 entity.ToTable("shipments");
@@ -336,29 +328,15 @@ namespace MarketNet.Infraestructure.Persistence
                       .IsRequired()
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.Property(s => s.Carrier)
-                      .IsRequired()
-                      .HasMaxLength(100);
-
-                entity.Property(s => s.TrackingNumber)
-                      .HasMaxLength(100);
-
-                entity.Property(s => s.ShippedAt)
-                      .IsRequired();
-
-                entity.Property(s => s.DeliveredAt)
-                      .IsRequired(false);
-
-                entity.Property(s => s.Cost)
-                      .IsRequired()
-                      .HasColumnType("decimal(18,2)");
-
-                entity.Property(s => s.Status)
-                      .HasConversion<string>()
-                      .IsRequired();
+                entity.Property(s => s.Carrier).IsRequired().HasMaxLength(100);
+                entity.Property(s => s.TrackingNumber).HasMaxLength(100);
+                entity.Property(s => s.ShippedAt).IsRequired();
+                entity.Property(s => s.DeliveredAt).IsRequired(false);
+                entity.Property(s => s.Cost).IsRequired().HasColumnType("decimal(18,2)");
+                entity.Property(s => s.Status).HasConversion<string>().IsRequired();
             });
 
-            // REVIEW
+            // ========== REVIEW ==========
             model.Entity<Review>(entity =>
             {
                 entity.ToTable("reviews");
@@ -370,9 +348,9 @@ namespace MarketNet.Infraestructure.Persistence
                       .IsRequired()
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(r => r.Customer)
-                      .WithMany(c => c.Reviews)
-                      .HasForeignKey(r => r.CustomerId)
+                entity.HasOne(r => r.CustomerProfile)
+                      .WithMany(cp => cp.Reviews)
+                      .HasForeignKey(r => r.CustomerProfileId)
                       .IsRequired()
                       .OnDelete(DeleteBehavior.Restrict);
 
@@ -383,15 +361,17 @@ namespace MarketNet.Infraestructure.Persistence
             });
 
             ApplyPrefixedSnakeCaseColumnNames(model);
+
+
         }
+
 
         private static void ApplyPrefixedSnakeCaseColumnNames(ModelBuilder modelBuilder)
         {
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
                 var tableName = entity.GetTableName();
-                if (string.IsNullOrWhiteSpace(tableName))
-                    continue;
+                if (string.IsNullOrWhiteSpace(tableName)) continue;
 
                 var prefix = SingularizeSnake(tableName);
 
@@ -431,14 +411,11 @@ namespace MarketNet.Infraestructure.Persistence
 
             var last = parts[^1];
             string singularLast;
-            if (last.EndsWith("ies"))
-                singularLast = last[..^3] + "y";
+            if (last.EndsWith("ies")) singularLast = last[..^3] + "y";
             else if (last.EndsWith("ses") || last.EndsWith("xes") || last.EndsWith("zes") || last.EndsWith("ches") || last.EndsWith("shes"))
                 singularLast = last[..^2];
-            else if (last.EndsWith("s"))
-                singularLast = last[..^1];
-            else
-                singularLast = last;
+            else if (last.EndsWith("s")) singularLast = last[..^1];
+            else singularLast = last;
 
             parts[^1] = singularLast;
             return string.Join('_', parts);
@@ -449,7 +426,7 @@ namespace MarketNet.Infraestructure.Persistence
             if (string.IsNullOrEmpty(input)) return input;
 
             var sb = new StringBuilder();
-            var prevCategory = default(UnicodeCategory?);
+            var prevCategory = default(System.Globalization.UnicodeCategory?);
             for (int i = 0; i < input.Length; i++)
             {
                 var c = input[i];
@@ -467,5 +444,6 @@ namespace MarketNet.Infraestructure.Persistence
             }
             return sb.ToString();
         }
+
     }
 }

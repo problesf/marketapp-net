@@ -8,9 +8,6 @@
     {
         public UpdateProductCommandValidator()
         {
-            RuleFor(p => p.Code)
-                .NotEmpty().WithMessage("Code es obligatorio.");
-
             RuleFor(p => p.Stock)
             .GreaterThanOrEqualTo(0)
             .WithMessage("Stock no puede ser negativo")

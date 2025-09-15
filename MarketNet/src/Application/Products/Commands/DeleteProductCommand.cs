@@ -9,7 +9,7 @@ namespace MarketNet.Application.Products.Commands
 {
     public record DeleteProductCommand : IRequest<ProductDto>
     {
-        public string Code { get; init; }
+        public long Id { get; init; }
     }
 
     public class DeleteProductCommandHandler(IProductRepository productRepository, IMapper mapper) : IRequestHandler<DeleteProductCommand, ProductDto>
@@ -18,13 +18,13 @@ namespace MarketNet.Application.Products.Commands
         public async Task<ProductDto> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
 
-            Product product = await productRepository.SearchByProductCode(request.Code);
+            Product product = await productRepository.GetByIdAsync(request.Id);
             if (product == null)
             {
-                throw new ProductNotFoundException($"Product con código de producto {request.Code}");
+                throw new ProductNotFoundException(request.Id);
             }
 
-            
+
             await productRepository.DeleteAsync(product.Id.Value);
             return mapper.Map<ProductDto>(product);
 

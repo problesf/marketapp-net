@@ -1,17 +1,17 @@
-﻿namespace MarketNet.Domain.Exceptions.Categories
+﻿using MarketNet.Domain.Exceptions.Base;
+
+namespace MarketNet.Domain.Exceptions.Categories
 {
     [Serializable]
-    class CategoryExistException : Exception
+    public class CategoryExistException : BaseException
     {
-        public CategoryExistException()
+        public CategoryExistException(string slug)
+            : base("category_exists", 409, $"Ya existe una categoría con slug {slug}.")
         {
         }
 
-        public CategoryExistException(string? message) : base(message)
-        {
-        }
-
-        public CategoryExistException(string? message, Exception? innerException) : base(message, innerException)
+        public CategoryExistException(string slug, Exception? inner)
+            : base("category_exists", 409, $"Ya existe una categoría con slug {slug}.", inner)
         {
         }
     }

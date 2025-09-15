@@ -4,8 +4,10 @@
     {
         Task<TEntity?> GetByIdAsync(long id);
         Task<IEnumerable<TEntity>> GetAllAsync();
-        Task<long> AddAsync(TEntity entity);
+        Task AddAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(long id);
+        Task<bool> SaveAsync(CancellationToken cancellationToken);
+
     }
 }

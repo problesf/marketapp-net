@@ -1,17 +1,22 @@
-﻿namespace MarketNet.Domain.Exceptions.Categories
+﻿using MarketNet.Domain.Exceptions.Base;
+
+namespace MarketNet.Domain.Exceptions.Categories
 {
     [Serializable]
-    class CategoryNotFoundException : Exception
+    public class CategoryNotFoundException : BaseException
     {
-        public CategoryNotFoundException()
+        public CategoryNotFoundException(long id)
+            : base("category_not_found", 404, $"No se encontró la categoría con Id {id}.")
         {
         }
 
-        public CategoryNotFoundException(string? message) : base(message)
+        public CategoryNotFoundException(string slug)
+            : base("category_not_found", 404, $"No se encontró la categoría con slug {slug}.")
         {
         }
 
-        public CategoryNotFoundException(string? message, Exception? innerException) : base(message, innerException)
+        public CategoryNotFoundException(string message, Exception? inner)
+            : base("category_not_found", 404, message, inner)
         {
         }
     }
