@@ -9,7 +9,8 @@
         public LoginQueryValidator()
         {
             RuleFor(u => u.Email)
-                .NotEmpty().WithMessage("Email es obligatorio.");
+                .NotEmpty().WithMessage("Email es obligatorio.")
+                .EmailAddress().WithMessage("Email con formato incorrecto");
 
             RuleFor(p => p.Password)
                 .NotEmpty().WithMessage("Password es obligatoria.");

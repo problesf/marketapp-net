@@ -9,8 +9,8 @@ namespace MarketNet.Application.Categories.Commands
 {
     public record UpdateCategoryCommand : IRequest<CategoryDto>
     {
+        public long Id { get; set; }
         public string Name { get; set; }
-        public string Slug { get; set; }
         public string Description { get; set; }
 
         public long? ParentCategoryId { get; set; }
@@ -24,10 +24,10 @@ namespace MarketNet.Application.Categories.Commands
         public async Task<CategoryDto> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
 
-            Category category = await categoryRepository.SearchBySlug(request.Slug);
+            Category category = await categoryRepository.GetByIdAsync(request.Id);
             if (category == null)
             {
-                throw new CategoryNotFoundException($"Categoria con slug {request.Slug}");
+                throw new CategoryNotFoundException(request.Id);
             }
 
             if (request.Name != null)

@@ -2,6 +2,7 @@
 using MarketNet.Application.Products.Dto;
 using MarketNet.Application.Products.Queries;
 using MarketNet.Domain.Entities.Products;
+using MarketNet.Infraestructure.Persistence.Repositories;
 
 namespace Application.UnitTest.src.Application.Products.Queries;
 

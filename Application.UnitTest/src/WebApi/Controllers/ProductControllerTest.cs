@@ -19,7 +19,7 @@ namespace Application.UnitTest.src.WebApi.Controllers
         [Test]
         public void Create()
         {
-            var actual = new ProductController(_mediatorMock.Object);
+            var actual = new ProductsController(_mediatorMock.Object);
 
             CreateProductCommand command = new CreateProductCommand
             {
@@ -41,7 +41,7 @@ namespace Application.UnitTest.src.WebApi.Controllers
         [Test]
         public void Update()
         {
-            var actual = new ProductController(_mediatorMock.Object);
+            var actual = new ProductsController(_mediatorMock.Object);
 
             var id = 42L;
             UpdateProductCommand command = new UpdateProductCommand
@@ -65,7 +65,7 @@ namespace Application.UnitTest.src.WebApi.Controllers
         [Test]
         public void SearchByFilter()
         {
-            var actual = new ProductController(_mediatorMock.Object);
+            var actual = new ProductsController(_mediatorMock.Object);
 
             SearchProductsQuery command = new SearchProductsQuery
             {
@@ -91,7 +91,7 @@ namespace Application.UnitTest.src.WebApi.Controllers
         [Test]
         public void SearchByCode()
         {
-            var actual = new ProductController(_mediatorMock.Object);
+            var actual = new ProductsController(_mediatorMock.Object);
 
             SearchProductsByProductCodeOrIdQuery command = new SearchProductsByProductCodeOrIdQuery
             {
@@ -108,7 +108,7 @@ namespace Application.UnitTest.src.WebApi.Controllers
         [Test]
         public void SearchById()
         {
-            var actual = new ProductController(_mediatorMock.Object);
+            var actual = new ProductsController(_mediatorMock.Object);
 
             SearchProductsByProductCodeOrIdQuery command = new SearchProductsByProductCodeOrIdQuery
             {
@@ -120,6 +120,42 @@ namespace Application.UnitTest.src.WebApi.Controllers
             _mediatorMock.Verify(x => x.Send(
                 It.Is<SearchProductsByProductCodeOrIdQuery>(c => JsonConvert.SerializeObject(c) == JsonConvert.SerializeObject(command)),
                 It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Test]
+        public void Activate()
+        {
+            var actual = new ProductsController(_mediatorMock.Object);
+
+            var results = actual.Activate(1L);
+
+            _mediatorMock.Verify(x => x.Send(
+                It.Is<ActivateProductCommand>(c => c.Id == 1L),
+                It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Test]
+        public void Desactivate()
+        {
+            var actual = new ProductsController(_mediatorMock.Object);
+
+            var results = actual.Deactivate(1L);
+
+            _mediatorMock.Verify(x => x.Send(
+               It.Is<DeactivateProductCommand>(c => c.Id == 1L),
+               It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Test]
+        public void Delete()
+        {
+            var actual = new ProductsController(_mediatorMock.Object);
+
+            var results = actual.DeleteByCode(1L);
+
+            _mediatorMock.Verify(x => x.Send(
+               It.Is<DeleteProductCommand>(c => c.Id == 1L),
+               It.IsAny<CancellationToken>()), Times.Once());
         }
     }
 }

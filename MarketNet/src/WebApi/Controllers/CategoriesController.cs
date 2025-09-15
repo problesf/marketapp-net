@@ -22,7 +22,7 @@ namespace MarketNet.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<List<CategoryDto>>> search([FromQuery] SearchCategoriesQuery query)
+        public async Task<ActionResult<List<CategoryDto>>> Search([FromQuery] SearchCategoriesQuery query)
         {
             return await _mediator.Send(query);
         }
@@ -32,7 +32,7 @@ namespace MarketNet.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<CategoryDto>> Search([FromQuery] SearchCategoryByIdOrSlugQuery request)
+        public async Task<ActionResult<CategoryDto>> SearchByIdentifiers([FromQuery] SearchCategoryByIdOrSlugQuery request)
         {
             return await _mediator.Send(request);
         }
@@ -47,13 +47,14 @@ namespace MarketNet.WebApi.Controllers
             return await _mediator.Send(command);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<CategoryDto>> Update(UpdateCategoryCommand command)
+        public async Task<ActionResult<CategoryDto>> Update([FromRoute] long id, UpdateCategoryCommand command)
         {
+            command.Id = id;
             return await _mediator.Send(command);
         }
     }

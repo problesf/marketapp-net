@@ -8,8 +8,6 @@
     {
         public UpdateCategoryCommandValidator()
         {
-            RuleFor(p => p.Slug)
-                .NotEmpty().WithMessage("Slug es obligatorio.");
 
             RuleFor(p => p.Description)
                 .MaximumLength(1000).When(p => !string.IsNullOrEmpty(p.Description))

@@ -9,10 +9,13 @@
         public UpdateProductCommandValidator()
         {
             RuleFor(p => p.Stock)
-            .GreaterThanOrEqualTo(0)
-            .WithMessage("Stock no puede ser negativo")
-            .When(p => p.Stock.HasValue);
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Stock no puede ser negativo.")
+                .When(p => p.Stock.HasValue);
 
+            RuleFor(p => p.Name)
+                .MaximumLength(25).When(p => !string.IsNullOrEmpty(p.Name))
+                .WithMessage("Name no puede exceder 25 caracteres.");
 
             RuleFor(p => p.Description)
                 .MaximumLength(1000).When(p => !string.IsNullOrEmpty(p.Description))
@@ -20,17 +23,16 @@
                 .When(p => !string.IsNullOrEmpty(p.Description));
 
             RuleFor(p => p.Price)
-              .GreaterThanOrEqualTo(0m)
+                .GreaterThanOrEqualTo(0m)
                 .WithMessage("Price debe ser mayor o igual a 0.")
-              .Must(price => price.HasValue && HasAtMostTwoDecimals(price.Value))
+                .Must(price => price.HasValue && HasAtMostTwoDecimals(price.Value))
                 .WithMessage("Price debe tener como máximo 2 decimales.")
-              .When(p => p.Price.HasValue);
+                .When(p => p.Price.HasValue);
 
 
             RuleFor(p => p.Currency)
-                .NotEmpty().WithMessage("Currency es obligatorio.")
                 .Length(3).WithMessage("Currency debe tener exactamente 3 caracteres.")
-                .When(p => !string.IsNullOrEmpty(p.Description));
+                .When(p => !string.IsNullOrEmpty(p.Currency));
 
 
             RuleFor(p => p.TaxRate)

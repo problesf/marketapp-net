@@ -15,6 +15,12 @@
             RuleFor(p => p.Stock)
                 .GreaterThanOrEqualTo(0).WithMessage("Stock no puede ser negativo.");
 
+
+            RuleFor(p => p.Name)
+                .NotEmpty().WithMessage("Name es obligatorio")
+                .MaximumLength(25).When(p => !string.IsNullOrEmpty(p.Name))
+                .WithMessage("Name no puede exceder 25 caracteres.");
+
             RuleFor(p => p.Description)
                 .MaximumLength(1000).When(p => !string.IsNullOrEmpty(p.Description))
                 .WithMessage("Description no puede exceder 1000 caracteres.");

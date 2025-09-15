@@ -9,11 +9,11 @@ namespace MarketNet.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ProductController(IMediator mediator)
+        public ProductsController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -67,11 +67,9 @@ namespace MarketNet.WebApi.Controllers
         [Authorize(Policy = "ProductOwnerOnly")]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ProductDto>> DeleteByCode(
-            [FromRoute] long id,
-            CancellationToken cancellationToken)
+        public async Task<ActionResult<ProductDto>> DeleteByCode([FromRoute] long id)
         {
-            return await _mediator.Send(new DeleteProductCommand { Id = id }, cancellationToken);
+            return await _mediator.Send(new DeleteProductCommand { Id = id });
         }
         [HttpPut("activate/{id:long}")]
         [Authorize(Policy = "ProductOwnerOnly")]
