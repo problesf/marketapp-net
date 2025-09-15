@@ -2,7 +2,7 @@
 {
 
     using FluentValidation;
-    using MarketNet.src.Application.Auth.Commands;
+    using MarketNet.Application.Auth.Commands;
 
     public class RegisterSellerCommandValidator : AbstractValidator<RegisterSellerCommand>
     {

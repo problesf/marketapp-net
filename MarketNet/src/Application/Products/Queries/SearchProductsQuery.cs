@@ -1,6 +1,6 @@
 using AutoMapper;
 using MarketNet.Application.Products.Dto;
-using MarketNet.Infraestructure.Repositories;
+using MarketNet.Infraestructure.Persistence.Repositories;
 using MediatR;
 
 namespace MarketNet.Application.Products.Queries

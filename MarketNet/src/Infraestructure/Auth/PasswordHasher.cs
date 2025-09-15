@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Infraestructure.Auth
+﻿namespace MarketNet.Infraestructure.Auth
 {
     public static class PasswordHasher
     {

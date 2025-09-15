@@ -2,11 +2,11 @@
 using System.Security.Claims;
 using System.Text;
 using MarketNet.Domain.Entities.User;
-using MarketNet.src.Infraestructure.Auth.Parameters;
+using MarketNet.Infraestructure.Auth.Parameters;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MarketNet.src.Infraestructure.Auth.Services.Impl
+namespace MarketNet.Infraestructure.Auth.Services.Impl
 {
     public class JwtTokenServiceImpl : IJwtTokenService
     {

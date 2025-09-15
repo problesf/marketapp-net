@@ -1,6 +1,6 @@
 ﻿using MarketNet.Domain.Entities.User;
 
-namespace MarketNet.src.Infraestructure.Auth.Services
+namespace MarketNet.Infraestructure.Auth.Services
 {
     public interface IJwtTokenService
     {

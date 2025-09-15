@@ -1,10 +1,11 @@
-﻿using MarketNet.Application.Common.Interfaces;           // IUserContext
-using MarketNet.Infraestructure.Repositories;            // IProductRepository
-using MarketNet.src.Infraestructure.Auth.Requirements.Products;
+﻿using MarketNet.Application.Common.Interfaces;
+using MarketNet.Infraestructure.Auth.Requirements.Products;
+using MarketNet.Infraestructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace MarketNet.src.Infraestructure.Auth.Handlers.Products
+
+namespace MarketNet.Infraestructure.Auth.Handlers.Products
 {
     public class ProductOwnerHandler : AuthorizationHandler<ProductOwnerRequirement>
     {

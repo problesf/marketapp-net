@@ -1,6 +1,6 @@
 ﻿using MarketNet.Domain.Exceptions.Base;
 
-namespace MarketNet.src.Domain.Exceptions.Auth
+namespace MarketNet.Domain.Exceptions.Auth
 {
     public class RegisterEmailExistException : BaseException
     {

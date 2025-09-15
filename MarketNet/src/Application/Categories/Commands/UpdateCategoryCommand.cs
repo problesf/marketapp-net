@@ -2,7 +2,7 @@ using AutoMapper;
 using MarketNet.Application.Categories.Dto;
 using MarketNet.Domain.Entities.Products;
 using MarketNet.Domain.Exceptions.Categories;
-using MarketNet.Infraestructure.Repositories;
+using MarketNet.Infraestructure.Persistence.Repositories;
 using MediatR;
 
 namespace MarketNet.Application.Categories.Commands

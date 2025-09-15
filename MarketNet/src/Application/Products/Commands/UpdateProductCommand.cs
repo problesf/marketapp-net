@@ -2,7 +2,8 @@ using AutoMapper;
 using MarketNet.Application.Products.Dto;
 using MarketNet.Domain.Entities.Products;
 using MarketNet.Domain.Exceptions.Products;
-using MarketNet.Infraestructure.Repositories;
+using MarketNet.Infraestructure.Persistence.Repositories;
+
 using MediatR;
 
 namespace MarketNet.Application.Products.Commands

@@ -1,6 +1,6 @@
-﻿using MarketNet.src.Application.Auth.Commands;
-using MarketNet.src.Application.Auth.Dto;
-using MarketNet.src.Application.Auth.Queries;
+﻿using MarketNet.Application.Auth.Commands;
+using MarketNet.Application.Auth.Dto;
+using MarketNet.Application.Auth.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

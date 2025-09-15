@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Application.Auth.Dto
+﻿namespace MarketNet.Application.Auth.Dto
 {
     public record LoginResult(string AccessToken, IEnumerable<String> Roles);
 

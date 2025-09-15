@@ -1,7 +1,6 @@
 ﻿using MarketNet.Domain.Entities.User;
-using MarketNet.Infraestructure.Repositories;
 
-namespace MarketNet.src.Infraestructure.Repositories
+namespace MarketNet.Infraestructure.Persistence.Repositories
 {
     public interface IUserRepository : IRepository<User>
     {

@@ -1,4 +1,4 @@
-﻿namespace MarketNet.src.Infraestructure.Auth.Parameters
+﻿namespace MarketNet.Infraestructure.Auth.Parameters
 {
     public class JwtParameters
     {

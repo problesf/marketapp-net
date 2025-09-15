@@ -1,10 +1,7 @@
-﻿
-
-using MarketNet.Domain.Shared;
-using MarketNet.Infraestructure.Persistence;
+﻿using MarketNet.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarketNet.Infraestructure.Repositories.Impl
+namespace MarketNet.Infraestructure.Persistence.Repositories.Impl
 {
     public class GenericRepositoryImpl<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {

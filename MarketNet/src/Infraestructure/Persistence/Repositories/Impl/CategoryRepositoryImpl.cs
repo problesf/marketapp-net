@@ -1,9 +1,8 @@
 ﻿using MarketNet.Application.Categories.Dto;
 using MarketNet.Domain.Entities.Products;
-using MarketNet.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarketNet.Infraestructure.Repositories.Impl
+namespace MarketNet.Infraestructure.Persistence.Repositories.Impl
 {
     public class CategoryRepositoryImpl : GenericRepositoryImpl<Category>, ICategoryRepository
     {

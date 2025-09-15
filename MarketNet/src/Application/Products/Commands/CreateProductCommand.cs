@@ -3,7 +3,7 @@ using MarketNet.Application.Common.Interfaces;
 using MarketNet.Domain.Entities.Products;
 using MarketNet.Domain.Exceptions.Categories;
 using MarketNet.Domain.Exceptions.Products;
-using MarketNet.Infraestructure.Repositories;
+using MarketNet.Infraestructure.Persistence.Repositories;
 using MediatR;
 
 namespace MarketNet.Application.Products.Commands

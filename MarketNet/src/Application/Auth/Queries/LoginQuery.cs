@@ -1,11 +1,11 @@
-﻿using MarketNet.src.Application.Auth.Dto;
-using MarketNet.src.Domain.Exceptions.Auth;
-using MarketNet.src.Infraestructure.Auth;
-using MarketNet.src.Infraestructure.Auth.Services;
-using MarketNet.src.Infraestructure.Repositories;
+﻿using MarketNet.Application.Auth.Dto;
+using MarketNet.Domain.Exceptions.Auth;
+using MarketNet.Infraestructure.Auth;
+using MarketNet.Infraestructure.Auth.Services;
+using MarketNet.Infraestructure.Persistence.Repositories;
 using MediatR;
 
-namespace MarketNet.src.Application.Auth.Queries
+namespace MarketNet.Application.Auth.Queries
 {
     public record LoginQuery : IRequest<LoginResult>
     {

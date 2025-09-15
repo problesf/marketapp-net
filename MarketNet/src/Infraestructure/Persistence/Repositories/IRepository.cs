@@ -1,4 +1,4 @@
-﻿namespace MarketNet.Infraestructure.Repositories
+﻿namespace MarketNet.Infraestructure.Persistence.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {

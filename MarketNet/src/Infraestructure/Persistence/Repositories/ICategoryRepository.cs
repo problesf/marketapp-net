@@ -1,7 +1,7 @@
 ﻿using MarketNet.Application.Categories.Dto;
 using MarketNet.Domain.Entities.Products;
 
-namespace MarketNet.Infraestructure.Repositories
+namespace MarketNet.Infraestructure.Persistence.Repositories
 {
     public interface ICategoryRepository : IRepository<Category>
     {

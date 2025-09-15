@@ -2,7 +2,7 @@
 {
 
     using FluentValidation;
-    using MarketNet.src.Application.Auth.Queries;
+    using MarketNet.Application.Auth.Queries;
 
     public class LoginQueryValidator : AbstractValidator<LoginQuery>
     {
