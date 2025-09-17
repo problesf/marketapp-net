@@ -40,8 +40,8 @@ namespace Application.IntegrationTest.Products.Commands
                 Stock = 10,
                 TaxRate = 10
             };
-            _category1 = new Category("CategoryExample1", "CategoryDescription", "CA-001", null);
-            _category2 = new Category("CategoryExample2", "CategoryDescription", "CA-002", null);
+            _category1 = new Category("CategoryExample1", "CategoryDescription", "CA-001", null,null);
+            _category2 = new Category("CategoryExample2", "CategoryDescription", "CA-002", null,null);
 
             await AddAsync<User>(_seller);
             await AddAsync<Category>(_category1);

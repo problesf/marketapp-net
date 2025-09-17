@@ -40,7 +40,7 @@ public class SearchProductsQueryHandlerTests
 
         var products = new List<Product>
         {
-            new Product("C-01", "Phone X", "Smartphone básico", 299m, 10, 0.21m, "EUR", true,1)
+            new Product("C-01", "Phone X", "Smartphone básico", 299m, 10, 0.21m, "EUR", true,1,null,null)
         };
 
 
