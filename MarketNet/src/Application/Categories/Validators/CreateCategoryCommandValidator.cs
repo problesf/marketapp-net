@@ -1,34 +1,36 @@
-﻿namespace MarketNet.Application.Categories.Validators
+﻿// Validator del COMMAND
+using FluentValidation;
+using MarketNet.Application.Categories.Commands;
+
+namespace MarketNet.Application.Categories.Validators;
+
+public sealed class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCommand>
 {
-
-    using FluentValidation;
-    using MarketNet.Application.Categories.Dto;
-
-    public class CreateCategoryCommandValidator : AbstractValidator<CategoryDto>
+    public CreateCategoryCommandValidator()
     {
-        public CreateCategoryCommandValidator()
-        {
-            RuleFor(p => p.Slug)
-                .NotEmpty().WithMessage("Slug es obligatorio.")
-                .MaximumLength(50).WithMessage("Code no puede exceder 50 caracteres.");
+        RuleFor(p => p.Slug)
+            .NotEmpty().WithMessage("Slug es obligatorio.")
+            .MaximumLength(100);
 
-            RuleFor(p => p.Description)
-                .NotEmpty().WithMessage("Description es obligatorio.")
-                .MaximumLength(1000).When(p => !string.IsNullOrEmpty(p.Description))
-                .WithMessage("Description no puede exceder 1000 caracteres.");
+        RuleFor(p => p.Name)
+            .NotEmpty().WithMessage("Name es obligatorio.")
+            .MaximumLength(100);
 
-            RuleFor(p => p.Name)
-                  .NotEmpty().WithMessage("Name es obligatorio.")
-                  .MaximumLength(100).When(p => !string.IsNullOrEmpty(p.Name))
-                  .WithMessage("Name no puede exceder 100 caracteres.");
+        RuleFor(p => p.Description)
+            .NotEmpty().WithMessage("Description es obligatoria.")
+            .MaximumLength(1000);
 
-        }
+        RuleForEach(p => p.ChildCategories)
+            .SetValidator(new CategoryChildDtoValidator());
 
-        private static bool HasAtMostTwoDecimals(decimal value)
-        {
-            value = decimal.Round(value, 2);
-            return (value * 100m) == decimal.Truncate(value * 100m);
-        }
+        RuleFor(x => x.ChildCategories)
+            .Must(list =>
+            {
+                var slugs = list
+                    .Where(c => c.Id == 0) // hijas nuevas
+                    .Select(c => (c.Slug ?? string.Empty).Trim().ToLowerInvariant());
+                return slugs.Distinct().Count() == slugs.Count();
+            })
+            .WithMessage("No puede haber categorías hijas nuevas con Slug duplicado en el request.");
     }
-
 }

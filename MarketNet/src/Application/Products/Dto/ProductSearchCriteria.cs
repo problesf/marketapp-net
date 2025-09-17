@@ -13,5 +13,7 @@
         public decimal? MaxTaxRate { get; init; }
         public string? Currency { get; init; }
         public bool? IsActive { get; init; }
+
+        public List<string> AttributeValues { get; init; }
     }
 }

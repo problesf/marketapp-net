@@ -18,6 +18,7 @@ namespace MarketNet.Application.Products.Queries
         public decimal? MaxTaxRate { get; init; }
         public string? Currency { get; init; }
         public bool? IsActive { get; init; }
+        public List<string>? AttributeValues { get; init; }
 
     }
 
@@ -37,7 +38,8 @@ namespace MarketNet.Application.Products.Queries
                 MinTaxRate = request.MinTaxRate,
                 MaxTaxRate = request.MaxTaxRate,
                 Currency = request.Currency,
-                IsActive = request.IsActive
+                IsActive = request.IsActive,
+                AttributeValues = request.AttributeValues
             };
 
             var products = await productRepository.SearchProductsAsync(criteria);

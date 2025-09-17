@@ -20,6 +20,7 @@ namespace MarketNet.Infraestructure.Persistence
 
         public DbSet<Product> Products => Set<Product>();
         public DbSet<Category> Categories => Set<Category>();
+        public DbSet<PAttribute> PAttributes => Set<PAttribute>();
         public DbSet<Address> Addresses => Set<Address>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItem => Set<OrderItem>();
@@ -37,7 +38,7 @@ namespace MarketNet.Infraestructure.Persistence
             {
                 b.ToTable("users");
                 b.HasKey(u => u.Id);
-
+                b.Property(b => b.Id).ValueGeneratedOnAdd();
                 b.Property(u => u.Email).IsRequired().HasMaxLength(255);
                 b.HasIndex(u => u.Email).IsUnique();
 
@@ -116,7 +117,7 @@ namespace MarketNet.Infraestructure.Persistence
             {
                 entity.ToTable("addresses");
                 entity.HasKey(a => a.Id);
-
+                entity.Property(a => a.Id).ValueGeneratedOnAdd();
                 entity.Property(a => a.Line1).IsRequired().HasMaxLength(200);
                 entity.Property(a => a.Line2).HasMaxLength(200);
                 entity.Property(a => a.City).IsRequired().HasMaxLength(120);
@@ -142,16 +143,25 @@ namespace MarketNet.Infraestructure.Persistence
             {
                 entity.ToTable("categories");
                 entity.HasKey(c => c.Id);
-
+                entity.Property(c => c.Id).ValueGeneratedOnAdd();
                 entity.Property(c => c.Name).IsRequired().HasMaxLength(50);
                 entity.Property(c => c.Slug).IsRequired().HasMaxLength(100);
                 entity.HasIndex(c => c.Slug).IsUnique();
-
+                entity.Property(c => c.IsActive).IsRequired().HasDefaultValue(true);
                 entity.HasOne(c => c.ParentCategory)
                       .WithMany(c => c.ChildCategories)
                       .HasForeignKey(c => c.ParentCategoryId)
                       .IsRequired(false)
                       .OnDelete(DeleteBehavior.Restrict);
+            });
+            model.Entity<PAttribute>(entity =>
+            {
+                entity.ToTable("product_attributes");
+                entity.HasKey(pa => pa.Id);
+                entity.Property(pa => pa.Id).ValueGeneratedOnAdd();
+                entity.Property(pa => pa.Name).IsRequired().HasMaxLength(50);
+                entity.Property(pa => pa.Value).IsRequired().HasMaxLength(100);
+                entity.HasIndex(pa => new { pa.ProductId, pa.Name }).IsUnique();
             });
 
             // ========== PRODUCT ==========
@@ -159,6 +169,7 @@ namespace MarketNet.Infraestructure.Persistence
             {
                 entity.ToTable("product");
                 entity.HasKey(p => p.Id);
+                entity.Property(p => p.Id).ValueGeneratedOnAdd();
 
                 entity.Property(p => p.Code).IsRequired().HasMaxLength(50);
                 entity.HasIndex(e => e.Code).IsUnique();
@@ -177,6 +188,11 @@ namespace MarketNet.Infraestructure.Persistence
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasMany(p => p.Categories).WithMany(c => c.Products);
+                entity.HasMany(p => p.Attributes)
+                      .WithOne(a => a.Product)
+                      .HasForeignKey(a => a.ProductId)
+                      .IsRequired()
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // ========== INVENTORY MOVEMENT ==========

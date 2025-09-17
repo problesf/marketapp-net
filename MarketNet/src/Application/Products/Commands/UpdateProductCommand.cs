@@ -1,9 +1,10 @@
 using AutoMapper;
 using MarketNet.Application.Products.Dto;
 using MarketNet.Domain.Entities.Products;
+using MarketNet.Domain.Exceptions.Categories;
 using MarketNet.Domain.Exceptions.Products;
 using MarketNet.Infraestructure.Persistence.Repositories;
-
+using MarketNet.src.Application.Products.Dto;
 using MediatR;
 
 namespace MarketNet.Application.Products.Commands
@@ -17,9 +18,13 @@ namespace MarketNet.Application.Products.Commands
         public int? Stock { get; init; }
         public decimal? TaxRate { get; init; }
         public string? Currency { get; init; }
+
+        public ICollection<long>? CategoriesId { get; init; }
+        public List<PAttributeDto>? Attributes { get; set; }
+
     }
 
-    public class UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper) : IRequestHandler<UpdateProductCommand, ProductDto>
+    public class UpdateProductCommandHandler(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper) : IRequestHandler<UpdateProductCommand, ProductDto>
     {
 
         public async Task<ProductDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -59,6 +64,20 @@ namespace MarketNet.Application.Products.Commands
             if (request.TaxRate != null)
             {
                 product.TaxRate = request.TaxRate.Value;
+            }
+            if (request.CategoriesId is { Count: > 0 })
+            {
+                ICollection<Category> productCategories = new List<Category>();
+                foreach (long idCategory in request.CategoriesId)
+                {
+                    Category category = await categoryRepository.SearchById(idCategory);
+                    if (category == null)
+                    {
+                        throw new CategoryNotFoundException($"Categoria con ID {idCategory} no encontrado");
+                    }
+                    productCategories.Add(category);
+                }
+                product.Categories = productCategories;
             }
 
             await productRepository.UpdateAsync(product);

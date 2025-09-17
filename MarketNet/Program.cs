@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using FluentValidation;
 using MarketNet.Application.Behaviors;
@@ -12,6 +13,7 @@ using MarketNet.Infraestructure.Persistence;
 using MarketNet.Infraestructure.Persistence.Repositories;
 using MarketNet.Infraestructure.Persistence.Repositories.Impl;
 using MarketNet.Infrastructure.Auth;
+using MarketNet.src.Infraestructure.Persistence.Repositories;
 using MarketNet.WebApi.Middleware;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -105,6 +107,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IProductRepository, ProductRepositoryImpl>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepositoryImpl>();
 builder.Services.AddScoped<IUserRepository, UserRepositoryImpl>();
+builder.Services.AddScoped<IPAttributeRepository, PAttributeRepositoryImpl>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryCommandValidator>();
 
@@ -126,8 +129,22 @@ builder.Services.AddMediatR(cfg =>
         typeof(Program).Assembly
     );
 });
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+var useTcPg = builder.Configuration.GetValue<bool>("UseTestcontainersPostgres");
+
+if (builder.Environment.IsEnvironment("Testing") && !useTcPg)
+{
+    builder.Services.AddDbContext<AppDbContext>(o =>
+        o.UseInMemoryDatabase("TestDb"));
+}
+else
+{
+    var cs = builder.Configuration.GetConnectionString("DefaultConnection")
+             ?? builder.Configuration["ConnectionStrings:Default"]
+             ?? throw new InvalidOperationException("Falta la cadena de conexión 'DefaultConnection'.");
+
+    builder.Services.AddDbContext<AppDbContext>(o =>
+        o.UseNpgsql(cs));
+}
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(o => o.SuppressModelStateInvalidFilter = true);
@@ -151,3 +168,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+[ExcludeFromCodeCoverage]
+public partial class Program
+{
+    /// <inheritdoc/>
+    protected Program() { }
+}

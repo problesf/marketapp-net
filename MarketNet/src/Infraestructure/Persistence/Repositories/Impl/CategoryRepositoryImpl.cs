@@ -11,17 +11,16 @@ namespace MarketNet.Infraestructure.Persistence.Repositories.Impl
         public Task<Category?> SearchById(long id)
         {
             return _context.Categories
-                .AsNoTracking()
                 .Include(c => c.ParentCategory)
+                .AsTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public Task<Category?> SearchBySlug(string slug)
         {
             return _context.Categories
-                .AsNoTracking()
-                .Include(c => c.ParentCategory)
-                .FirstOrDefaultAsync(c => EF.Functions.ILike(c.Slug, slug));
+                .Include(c => c.ParentCategory).AsTracking()
+                .FirstOrDefaultAsync(c => c.Slug == slug);
         }
 
         public async Task<IEnumerable<Category>> Search(CategorySearchCriteria criteria)
@@ -52,6 +51,7 @@ namespace MarketNet.Infraestructure.Persistence.Repositories.Impl
             }
 
             return await query
+                .AsTracking()
                 .Include(c => c.ParentCategory)
                 .ToListAsync();
         }

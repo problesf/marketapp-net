@@ -53,7 +53,7 @@ namespace MarketNet.WebApi.Controllers
             return await _mediator.Send(command);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:long}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -61,6 +61,28 @@ namespace MarketNet.WebApi.Controllers
         public async Task<ActionResult<CategoryDto>> Update([FromRoute] long id, UpdateCategoryCommand command)
         {
             command.Id = id;
+            return await _mediator.Send(command);
+        }
+
+        [HttpPut("{id:long}/activate")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        public async Task<ActionResult<bool>> Activate([FromRoute] long id)
+        {
+            ActivateCategoryCommand command = new ActivateCategoryCommand { IsActive = true, Id = id };
+            return await _mediator.Send(command);
+        }
+
+        [HttpPut("{id:long}/desactivate")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        public async Task<ActionResult<bool>> Desactivate([FromRoute] long id)
+        {
+            ActivateCategoryCommand command = new ActivateCategoryCommand { IsActive = true, Id = id };
             return await _mediator.Send(command);
         }
     }

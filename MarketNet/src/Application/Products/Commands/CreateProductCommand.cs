@@ -4,6 +4,7 @@ using MarketNet.Domain.Entities.Products;
 using MarketNet.Domain.Exceptions.Categories;
 using MarketNet.Domain.Exceptions.Products;
 using MarketNet.Infraestructure.Persistence.Repositories;
+using MarketNet.src.Application.Products.Dto;
 using MediatR;
 
 namespace MarketNet.Application.Products.Commands
@@ -18,7 +19,9 @@ namespace MarketNet.Application.Products.Commands
         public decimal TaxRate { get; init; }
         public string Currency { get; init; }
 
-        public List<long>? categoriesId { get; set; }
+        public List<long>? CategoriesId { get; set; }
+
+        public List<PAttributeDto>? Attributes { get; set; }
     }
 
     public class CreateProductCommandHandler(IProductRepository productRepository,
@@ -36,12 +39,12 @@ namespace MarketNet.Application.Products.Commands
                 throw new ProductExistException($"Ya existe un product con c�digo {request.Code}.");
             }
 
-            ICollection<Category> productCategories = new List<Category>();
-            if (request.categoriesId != null)
+            List<Category> productCategories = new List<Category>();
+            if (request.CategoriesId != null)
             {
-                foreach (long idCategory in request.categoriesId)
+                foreach (long idCategory in request.CategoriesId)
                 {
-                    Category category = await categoryRepository.GetByIdAsync(idCategory);
+                    Category category = await categoryRepository.SearchById(idCategory);
                     if (category == null)
                     {
                         throw new CategoryNotFoundException($"Categoria con ID {idCategory} no encontrado");
@@ -49,6 +52,9 @@ namespace MarketNet.Application.Products.Commands
                     productCategories.Add(category);
                 }
             }
+            List<PAttribute> attributes = null;
+            if (request.Attributes != null)
+                attributes = mapper.Map<List<PAttribute>>(request.Attributes);
             Product newProduct = new Product(
                 request.Code,
                 request.Name,
@@ -58,7 +64,9 @@ namespace MarketNet.Application.Products.Commands
                 request.TaxRate,
                 request.Currency,
                 true,
-                sellerId
+                sellerId,
+                productCategories,
+                attributes
             );
             newProduct.Categories = productCategories;
             await productRepository.AddAsync(newProduct);

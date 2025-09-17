@@ -19,19 +19,20 @@ namespace MarketNet.Domain.Entities.Products
         public decimal TaxRate { get; set; }
         public string Currency { get; set; }
         public bool IsActive { get; set; }
-        public long SellerProfileId { get; private set; }
+        public long SellerProfileId { get; set; }
         public SellerProfile Seller { get; private set; } = null!;
         public ICollection<Category> Categories { get; set; } = new List<Category>();
         public ICollection<InventoryMovement> InventoryMovements { get; set; } = new List<InventoryMovement>();
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+        public ICollection<PAttribute> Attributes { get; set; } = new List<PAttribute>();
 
         public Product()
         {
 
         }
-        public Product(string code, string name, string description, decimal price, int stock, decimal taxRate, string currency, bool isActive, long sellerProfileId)
+        public Product(string code, string name, string description, decimal price, int stock, decimal taxRate, string currency, bool isActive, long sellerProfileId, List<Category>? categories, List<PAttribute>? attributes)
         {
             Code = code;
             Name = name;
@@ -42,6 +43,11 @@ namespace MarketNet.Domain.Entities.Products
             Currency = currency;
             IsActive = isActive;
             SellerProfileId = sellerProfileId;
+            if (categories != null)
+                Categories = categories;
+            if (attributes != null)
+                Attributes = attributes;
+
         }
     }
 }

@@ -16,7 +16,7 @@ namespace MarketNet.Infraestructure.Persistence.Repositories.Impl
 
         public async Task<TEntity?> GetByIdAsync(long id)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.AsTracking().FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -28,7 +28,11 @@ namespace MarketNet.Infraestructure.Persistence.Repositories.Impl
         {
             await _dbSet.AddAsync(entity);
         }
-
+        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities is null) throw new ArgumentNullException(nameof(entities));
+            await _dbSet.AddRangeAsync(entities);
+        }
         public async Task UpdateAsync(TEntity entity)
         {
             _dbSet.Attach(entity);

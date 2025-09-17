@@ -8,6 +8,7 @@
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(long id);
         Task<bool> SaveAsync(CancellationToken cancellationToken);
+        Task AddRangeAsync(IEnumerable<TEntity> entities);
 
     }
 }

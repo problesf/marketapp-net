@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MarketNet.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250915085154_initDb")]
-    partial class initDb
+    [Migration("20250917084623_AddActivateAttributeToCategory")]
+    partial class AddActivateAttributeToCategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -289,6 +289,10 @@ namespace MarketNet.Migrations
                         .HasColumnType("text")
                         .HasColumnName("category_description");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("category_is_active");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -313,6 +317,39 @@ namespace MarketNet.Migrations
                         .IsUnique();
 
                     b.ToTable("categories", (string)null);
+                });
+
+            modelBuilder.Entity("MarketNet.Domain.Entities.Products.PAttribute", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("product_attribute_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("product_attribute_name");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("product_attribute_product_id");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("product_attribute_value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("product_attributes", (string)null);
                 });
 
             modelBuilder.Entity("MarketNet.Domain.Entities.Products.Product", b =>
@@ -430,12 +467,6 @@ namespace MarketNet.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("seller_profile_store_name");
-
-                    b.Property<string>("TaxId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("seller_profile_tax_id");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint")
@@ -829,6 +860,17 @@ namespace MarketNet.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("MarketNet.Domain.Entities.Products.PAttribute", b =>
+                {
+                    b.HasOne("MarketNet.Domain.Entities.Products.Product", "Product")
+                        .WithMany("Attributes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("MarketNet.Domain.Entities.Products.Product", b =>
                 {
                     b.HasOne("MarketNet.Domain.Entities.User.SellerProfile", "Seller")
@@ -933,6 +975,8 @@ namespace MarketNet.Migrations
 
             modelBuilder.Entity("MarketNet.Domain.Entities.Products.Product", b =>
                 {
+                    b.Navigation("Attributes");
+
                     b.Navigation("InventoryMovements");
 
                     b.Navigation("OrderItems");

@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MarketNet.Application.Categories.Dto;
 using MarketNet.Domain.Entities.Products;
 using MarketNet.Domain.Exceptions.Categories;
@@ -30,27 +30,45 @@ namespace MarketNet.Application.Categories.Commands
                 throw new CategoryExistException($"Ya existe una categoria con slug {request.Slug}.");
             }
 
-            List<Category> newCategories = [];
-            if (request.ChildCategories != null && request.ChildCategories.Any())
+            if (request.ParentCategoryId != null)
             {
-                foreach (CategoryChildDto categoryDto in request.ChildCategories)
+                Category existParent = await categoryRepository.SearchById(request.ParentCategoryId.Value);
+                if (existParent == null)
                 {
-                    Category category = await categoryRepository.SearchById(categoryDto.Id);
-                    if (category != null)
-                    {
-                        newCategories.Add(category);
-                    }
+                    throw new CategoryExistException(request.ParentCategoryId.Value);
                 }
             }
-            Category newCategory = new Category(
+
+            Category parentCategory = new Category(
                 request.Name,
                 request.Slug,
                 request.Description,
-                request.ParentCategoryId
+                request.ParentCategoryId,
+                null
             );
-            await categoryRepository.AddAsync(newCategory);
+            await categoryRepository.AddAsync(parentCategory);
+
+
+            if (request.ChildCategories is { Count: > 0 })
+            {
+                foreach (var item in request.ChildCategories)
+                {
+                    if (item.Id > 0)
+                    {
+                        Category category = await categoryRepository.GetByIdAsync(item.Id);
+                        category.ParentCategory = parentCategory;
+                    }
+                    else
+                    {
+                        Category newCategory = mapper.Map<Category>(item);
+                        newCategory.Id = null;
+                        newCategory.ParentCategory = parentCategory;
+                        await categoryRepository.AddAsync(newCategory);
+                    }
+                }
+            }
             await categoryRepository.SaveAsync(cancellationToken);
-            return newCategory.Id.Value;
+            return parentCategory.Id.Value;
 
         }
 

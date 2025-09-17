@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketNet", "MarketNet\Mark
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTest", "Application.UnitTest\Application.UnitTest.csproj", "{7012B450-243F-4114-BB73-F8EF06384B42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.IntegrationTest", "Application.IntegrationTest\Application.IntegrationTest.csproj", "{D1D1E7A1-94C2-4AFD-8FBE-5676FDD4D6CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E06A71CD-9C9D-4E69-B194-851AD7A7BF8D} = {E06A71CD-9C9D-4E69-B194-851AD7A7BF8D}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +26,10 @@ Global
 		{7012B450-243F-4114-BB73-F8EF06384B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7012B450-243F-4114-BB73-F8EF06384B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7012B450-243F-4114-BB73-F8EF06384B42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1D1E7A1-94C2-4AFD-8FBE-5676FDD4D6CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1D1E7A1-94C2-4AFD-8FBE-5676FDD4D6CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1D1E7A1-94C2-4AFD-8FBE-5676FDD4D6CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1D1E7A1-94C2-4AFD-8FBE-5676FDD4D6CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

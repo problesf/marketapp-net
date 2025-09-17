@@ -21,7 +21,7 @@ namespace MarketNet.Infraestructure.Persistence.Repositories.Impl
             return _context.Products
                 .AsNoTracking()
                 .Include(p => p.Categories)
-                .FirstOrDefaultAsync(p => EF.Functions.ILike(p.Code, productCode));
+                .FirstOrDefaultAsync(p => p.Code == productCode);
         }
 
         public async Task<IEnumerable<Product>> SearchProductsAsync(ProductSearchCriteria criteria)
@@ -75,8 +75,20 @@ namespace MarketNet.Infraestructure.Persistence.Repositories.Impl
 
             }
 
+            if (criteria.AttributeValues is { Count: > 0 })
+            {
+                foreach (var value in criteria.AttributeValues)
+                {
+                    query = query.Where(p =>
+                        p.Attributes.Any(a => EF.Functions.Like(a.Value, $"%{value}%"))
+                    );
+                }
+
+            }
+
             return await query
                 .Include(p => p.Categories)
+                .Include(p => p.Attributes)
                 .ToListAsync();
         }
     }

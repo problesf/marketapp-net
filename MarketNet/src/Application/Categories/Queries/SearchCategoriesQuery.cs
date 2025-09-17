@@ -12,6 +12,8 @@ namespace MarketNet.Application.Categories.Queries
         public string? Slug { get; set; }
         public string? Description { get; set; }
         public long? ParentCategoryId { get; set; }
+        public bool IsActive { get; set; }
+
 
     }
 
@@ -25,7 +27,8 @@ namespace MarketNet.Application.Categories.Queries
                 Description = request.Description,
                 Slug = request.Slug,
                 ParentCategoryId = request.ParentCategoryId,
-                Id = request.Id
+                Id = request.Id,
+                IsActive = request.IsActive
             };
 
             var categories = await categoryRepository.Search(criteria);

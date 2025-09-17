@@ -56,7 +56,6 @@ namespace MarketNet.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     seller_profile_user_id = table.Column<long>(type: "bigint", nullable: false),
                     seller_profile_store_name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    seller_profile_tax_id = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     seller_profile_payout_account = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true)
                 },
                 constraints: table =>

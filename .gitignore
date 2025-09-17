@@ -3,3 +3,7 @@ Application.UnitTest/bin/
 .vs/MarketApp/CopilotIndices/17.14.995.13737/SemanticSymbols.db-wal
 .vs/
 Application.UnitTest/obj/
+*.zip
+Application.IntegrationTest/bin/Debug/net8.0/Application.IntegrationTest.deps.json
+Application.IntegrationTest/bin/
+Application.IntegrationTest/obj/
