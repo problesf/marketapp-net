@@ -7,7 +7,7 @@ using MediatR;
 
 namespace MarketNet.Application.Categories.Commands
 {
-    public record CreateCategoryCommand : IRequest<long>
+    public record CreateCategoryCommand : IRequest<CategoryDto>
     {
         public string Name { get; set; }
         public string Slug { get; set; }
@@ -19,10 +19,10 @@ namespace MarketNet.Application.Categories.Commands
 
     }
 
-    public class CreateCategoryCommandCommandHandler(ICategoryRepository categoryRepository, IMapper mapper) : IRequestHandler<CreateCategoryCommand, long>
+    public class CreateCategoryCommandCommandHandler(ICategoryRepository categoryRepository, IMapper mapper) : IRequestHandler<CreateCategoryCommand, CategoryDto>
     {
 
-        public async Task<long> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             Category exist = await categoryRepository.SearchBySlug(request.Slug);
             if (exist != null)
@@ -60,15 +60,15 @@ namespace MarketNet.Application.Categories.Commands
                     }
                     else
                     {
-                        Category newCategory = mapper.Map<Category>(item);
+                        Category newCategory = mapper.Map<Category>(item, opt => opt.Items["parent"] = parentCategory);
                         newCategory.Id = null;
-                        newCategory.ParentCategory = parentCategory;
                         await categoryRepository.AddAsync(newCategory);
                     }
                 }
             }
             await categoryRepository.SaveAsync(cancellationToken);
-            return parentCategory.Id.Value;
+            Category categoryCreated = await categoryRepository.GetByIdAsync(parentCategory.Id.Value);
+            return mapper.Map<CategoryDto>(categoryCreated);
 
         }
 

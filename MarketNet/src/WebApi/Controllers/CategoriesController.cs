@@ -44,11 +44,11 @@ namespace MarketNet.WebApi.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(long))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<ActionResult<long>> Create(CreateCategoryCommand command)
+        public async Task<ActionResult<CategoryDto>> Create(CreateCategoryCommand command)
         {
             return await _mediator.Send(command);
         }

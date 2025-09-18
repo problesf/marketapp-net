@@ -14,9 +14,11 @@ namespace MarketNet.Infraestructure.Mappers
                 .ReverseMap()
                 .AfterMap((src, dest, ctx) =>
                     {
-                        var parent = ctx.Items["parent"] as Category;
-                        dest.ParentCategory = parent;
-                        dest.ParentCategoryId = parent?.Id;
+                        if (ctx.Items.TryGetValue("parent", out var parentObj) && parentObj is Category parent)
+                        {
+                            dest.ParentCategory = parent;
+                            dest.ParentCategoryId = parent.Id;
+                        }
                     })
                 .ForMember(d => d.Id, o =>
                 {
