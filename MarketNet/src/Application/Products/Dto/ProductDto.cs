@@ -14,6 +14,8 @@ namespace MarketNet.Application.Products.Dto
         public decimal TaxRate { get; set; }
         public string Currency { get; set; }
         public bool IsActive { get; set; }
+
+        public long SellerProfileId { get; set; }
         public List<CategoryDto> Categories { get; set; } = new();
     }
 }

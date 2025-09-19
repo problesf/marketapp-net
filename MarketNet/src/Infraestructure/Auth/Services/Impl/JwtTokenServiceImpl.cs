@@ -18,13 +18,15 @@ namespace MarketNet.Infraestructure.Auth.Services.Impl
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_parameters.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+            var profileId = user?.SellerProfile?.Id.ToString() ?? user?.CustomerProfile?.Id.ToString();
             var claims = new List<Claim>
                 {
                     new (JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                     new (JwtRegisteredClaimNames.UniqueName, user.Email),
                     new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new (ClaimTypes.Name, user.Email)
+                    new (ClaimTypes.Name, user.Email),
+                    new ("ProfileId",profileId),
+
                 };
             foreach (var role in roles)
             {
